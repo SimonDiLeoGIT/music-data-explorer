@@ -1,12 +1,9 @@
 import { Router } from "express";
-import {
-  getAlbumInsights,
-  getArtistStats,
-} from "../controllers/music.controller.js";
+import { albumInsights, albumTracks } from "../controllers/music.controller.js";
 
 const router = Router();
 
-router.get("/album/:id/insights", getAlbumInsights);
-router.get("/artist/:id/stats", getArtistStats);
+router.get("/album/:id/insights", albumInsights);
+router.get("/album/:id/tracks", albumTracks);
 
 export default router;
