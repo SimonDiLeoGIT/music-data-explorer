@@ -11,6 +11,7 @@ export async function albumInsights(req, res) {
       (sum, track) => sum + track.duration_ms,
       0
     );
+
     const albumTracks = albumData.tracks;
 
     // longest track
@@ -39,8 +40,8 @@ export async function albumInsights(req, res) {
       releaseDate: albumData.release_date,
       cover: albumData.images,
       trackCount,
-      totalDurationMs,
-      averageDurationMs,
+      totalDuration: durationMsToTimeString(totalDurationMs),
+      averageDurationMs: durationMsToTimeString(averageDurationMs),
       longestTrack: longestTrack.id,
       shortestTrack: shortestTrack.id,
     };
@@ -50,6 +51,19 @@ export async function albumInsights(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+
+const durationMsToTimeString = (durationMs) => {
+  const totalSeconds = Math.floor(durationMs / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  const durationString =
+    (hours > 0 ? `${hours}h ` : "") +
+    `${minutes}m ` +
+    seconds.toString().padStart(2, "0") +
+    "s";
+  return durationString;
+};
 
 // Get Album tracks with filters
 export async function albumTracks(req, res) {
@@ -63,7 +77,7 @@ export async function albumTracks(req, res) {
     const tracksDetailed = tracks.map((track) => ({
       id: track.id,
       name: track.name,
-      duration_ms: track.duration_ms,
+      duration_ms: durationMsToTimeString(track.duration_ms),
       popularity: track.popularity,
       track_number: track.track_number,
     }));
