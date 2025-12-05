@@ -1,14 +1,10 @@
-import {
-  getAlbumData,
-  getAlbumTracks,
-  getTrackDetails,
-} from "../services/spotify.service.js";
+import SpotifyService from "../services/spotify.service.js";
 
 export async function albumInsights(req, res) {
   const albumId = req.params.id;
 
   try {
-    const albumData = await getAlbumData(albumId);
+    const albumData = await SpotifyService.getAlbumData(albumId);
 
     const trackCount = albumData.total_tracks;
     const totalDurationMs = albumData.tracks.items.reduce(
@@ -101,22 +97,22 @@ export async function albumTracks(req, res) {
   const albumId = req.params.id;
 
   try {
-    const albumTracks = await getAlbumTracks(albumId);
+    const albumTracks = await SpotifyService.getAlbumTracks(albumId);
 
     if (!albumTracks) {
       return res.status(404).json({ error: "Album not found" });
     }
 
-    const tracks = albumTracks.items;
+    const trackIds = albumTracks.items.map((track) => track.id);
+
+    const severalTracksDetails = await SpotifyService.getSeveralTracksDetails(
+      trackIds
+    );
+
     const reducedTracks = [];
-
-    for (let i = 0; i < tracks.length; i++) {
-      const trackDetail = await getTrackDetails(tracks[i].id);
-      tracks[i].popularity = trackDetail.popularity;
-      tracks[i].explicit = trackDetail.explicit;
-      reducedTracks.push(reduceTrackInfo(tracks[i]));
+    for (let i = 0; i < severalTracksDetails.tracks.length; i++) {
+      reducedTracks.push(reduceTrackInfo(severalTracksDetails.tracks[i]));
     }
-
     res.json(reducedTracks);
   } catch (err) {
     throw new Error("Error fetching album tracks: " + err.message);
