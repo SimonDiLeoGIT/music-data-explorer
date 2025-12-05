@@ -64,3 +64,22 @@ export async function getAlbumTracks(albumId) {
     throw new Error("Error fetching album tracks: " + err.message);
   }
 }
+
+export async function getTrackDetails(trackId) {
+  const token = await getToken();
+
+  try {
+    const res = await axios.get(
+      `https://api.spotify.com/v1/tracks/${trackId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return res.data;
+  } catch (err) {
+    throw new Error("Error fetching track details: " + err.message);
+  }
+}

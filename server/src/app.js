@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import musicRoutes from "./routes/music.routes.js";
+import routes from "./routes/index.js";
 
 const app = express();
 
@@ -12,6 +12,6 @@ app.use(
   })
 );
 
-app.use("/api/music", musicRoutes);
+app.use("/api", routes);
 
 export default app;
