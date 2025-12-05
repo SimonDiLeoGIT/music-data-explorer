@@ -1,19 +1,44 @@
 import {getRequest} from './api.service';
 
-export async function getAlbumInsights() {
-  try {
-    const responseData = await getRequest('/albums/4aawyAB9vmqN3uQ7FjRGTy/insights');
-    return responseData;
-  } catch (error) {
-    console.error('Error fetching album insights:', error);
+class MusicService {
+
+  async getAlbumInsights(id: string) {
+    try {
+      const responseData = await getRequest(`/albums/${id}/insights`);
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching album insights:', error);
+    }
   }
+  
+  async getTrackDetails(albumId: string, sortBy?: string, sortOrder?: string) {
+    try {
+      const responseData = await getRequest(`/albums/${albumId}/tracks`, { sortBy, sortOrder });
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching track details:', error);
+    }
+  }
+
+  async getNewReleases(limit: number = 10, offset: number = 0) {
+    try {
+      const responseData = await getRequest(`/albums/browse/new-releases`, { limit, offset });
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching track details:', error);
+    }
+  }
+
+  async getNewReleasesInsights(albums: string) {
+    try {
+      const responseData = await getRequest(`/albums/insights`, { albums });
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching track details:', error);
+    }
+
+  }
+
 }
 
-export async function getTrackDetails(albumId: string) {
-  try {
-    const responseData = await getRequest(`/albums/${albumId}/tracks`);
-    return responseData;
-  } catch (error) {
-    console.error('Error fetching track details:', error);
-  }
-}
+export const musicService = new MusicService();

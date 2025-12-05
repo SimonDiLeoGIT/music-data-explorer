@@ -1,11 +1,12 @@
-import Album from './pages/Album/Album';
+import { BrowserRouter } from 'react-router-dom';
+import Router from './utils/Router';
 
 function App() {
 
   return (
-    <div className='p-4 bg-zinc-950 min-w-screen min-h-screen'>
-      <Album />
-    </div>
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
   )
 }
 

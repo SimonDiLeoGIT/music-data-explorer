@@ -1,15 +1,30 @@
 export interface AlbumInsightsInterface {
-  albumId: string
+  id: string
   name: string
   artist: string
   releaseDate: string
   cover: AlbumCoverInterface[]
-  trackCount: number
-  totalDuration: TrackDurationInterface
+  totalTracks: number
+  totalDuration: string
   averageDuration: TrackDurationInterface
   longestTrack: TrackInterface
   shortestTrack: TrackInterface
-  tracks: string[]
+  popularity: AlbumsPopularityInsight
+}
+
+interface AlbumsPopularityInsight {
+  average: number
+  mostPopularTrack: TrackInterface
+  leastPopularTrack: TrackInterface
+}
+
+export interface AlbumInterface {
+  id: string
+  name: string
+  artist: string
+  releaseDate: string
+  cover: AlbumCoverInterface[]
+  totalTracks: number
 }
 
 interface AlbumCoverInterface {
@@ -24,8 +39,14 @@ interface TrackDurationInterface {
 }
 
 export interface TrackInterface {
+  id: string
   name: string
   duration: TrackDurationInterface
   trackNumber: number
   popularity: number
+}
+
+export interface AlbumsPopularityInsights {
+  album: AlbumInterface
+  tracks: TrackInterface[]
 }
