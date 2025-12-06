@@ -59,6 +59,12 @@ export async function albumInsights(req, res) {
     );
     const reducedTracks = tracksDetails.tracks.map(reduceTrackInfo);
 
+    // Track Popularity
+    const average = InsightsService.albumPopularity(reducedTracks);
+    const mostPopularTrack = InsightsService.getMostPopularTrack(reducedTracks);
+    const leastPopularTrack =
+      InsightsService.getLeastPopularTrack(reducedTracks);
+
     const albumInsights = {
       id: albumData.id,
       name: albumData.name,

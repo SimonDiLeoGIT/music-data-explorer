@@ -1,4 +1,4 @@
-import {getRequest} from './api.service';
+import {getRequest, postRequest} from './api.service';
 
 class MusicService {
 
@@ -29,14 +29,49 @@ class MusicService {
     }
   }
 
-  async getNewReleasesInsights(albums: string) {
+  async getAlbumsPopularityInsights(albums: string) {
     try {
-      const responseData = await getRequest(`/albums/insights`, { albums });
+      const responseData = await postRequest(`/albums/popularity-insights`, { albums });
       return responseData;
     } catch (error) {
       console.error('Error fetching track details:', error);
     }
+  }
 
+  async getTopGenders() {
+    try {
+      const responseData = await getRequest(`/genders/top-ten`);
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching track details:', error);
+    }
+  }
+
+  async getTopGenderArtists(genderTag: string) {
+    try {
+      const responseData = await getRequest(`/genders/${genderTag}/top-artists`);
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching track details:', error);
+    }
+  }
+ 
+  async getTopGenderTracks(genderTag: string) {
+    try {
+      const responseData = await getRequest(`/genders/${genderTag}/top-tracks`);
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching track details:', error);
+    }
+  }
+ 
+  async getTopGenderAlbums(genderTag: string) {
+    try {
+      const responseData = await getRequest(`/genders/${genderTag}/top-albums`);
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching track details:', error);
+    }
   }
 
 }

@@ -25,6 +25,7 @@ export interface AlbumInterface {
   releaseDate: string
   cover: AlbumCoverInterface[]
   totalTracks: number
+  popularity: number
 }
 
 interface AlbumCoverInterface {
@@ -46,7 +47,3 @@ export interface TrackInterface {
   popularity: number
 }
 
-export interface AlbumsPopularityInsights {
-  album: AlbumInterface
-  tracks: TrackInterface[]
-}

@@ -5,12 +5,12 @@ dotenv.config();
 
 class SpotifyService {
   constructor() {
-    this.baseUrl = process.env.MUSIC_API_BASE_URL;
-    this.authUrl = process.env.MUSIC_API_AUTH_URL;
+    this.baseUrl = process.env.SPOTIFY_API_BASE_URL;
+    this.authUrl = process.env.SPOTIFY_API_AUTH_URL;
     this.token = null;
     this.tokenExpiration = null;
-    this.clientId = process.env.MUSIC_API_CLIENT_ID;
-    this.clientSecret = process.env.MUSIC_API_CLIENT_SECRET;
+    this.clientId = process.env.SPOTIFY_API_CLIENT_ID;
+    this.clientSecret = process.env.SPOTIFY_API_CLIENT_SECRET;
 
     // Validar credenciales al inicio
     if (!this.clientId || !this.clientSecret) {

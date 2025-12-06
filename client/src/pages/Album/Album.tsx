@@ -23,7 +23,7 @@ function Album() {
   }, [id])
 
   return( 
-    <main className='p-8 max-w-[1600px] mx-auto'>
+    <main className='p-8 w-11/12 max-w-[1600px] mx-auto'>
       <header className="bg-zinc-800 p-4 rounded-t-md relative overflow-hidden">
         {
           insights?.cover &&
@@ -45,13 +45,10 @@ function Album() {
         insights &&
         <AlbumCards insights={insights} />
       }
-      <section className="bg-zinc-800/50 p-4 rounded-b-md">
-        <h2 className="text-zinc-100 text-2xl font-semibold mb-4">Tracks</h2>
-        {/* {
-          insights && 
-          <Tracks list={insights.id} />
-        } */}
-      </section>
+      {
+        id && 
+        <Tracks albumId={id} />
+      }
     </main>
   )
 }

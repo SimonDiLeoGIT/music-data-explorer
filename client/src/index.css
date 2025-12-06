@@ -1,5 +1,5 @@
 @import "tailwindcss";
 
 body {
-  @apply bg-zinc-950 text-zinc-100 w-screen min-h-screen
+  @apply bg-zinc-950 text-zinc-100 min-h-screen max-w-screen overflow-x-hidden
 }
