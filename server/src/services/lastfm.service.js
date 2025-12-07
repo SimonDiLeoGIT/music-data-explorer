@@ -41,23 +41,23 @@ class LastfmService {
     }
   }
 
-  async getTopGenders() {
+  async getTopGenres() {
     const url = `?method=chart.gettoptags&api_key=${this.apiKey}&format=json&limit=10`;
     return this.getRequest(url);
   }
 
-  async getTopGenderArtists(genderTag) {
-    const url = `?method=tag.gettopartists&tag=${genderTag}&api_key=${this.apiKey}&format=json&limit=5`;
+  async getTopGenreArtists(GenreTag) {
+    const url = `?method=tag.gettopartists&tag=${GenreTag}&api_key=${this.apiKey}&format=json&limit=5`;
     return this.getRequest(url);
   }
 
-  async getTopGenderTracks(genderTag) {
-    const url = `?method=tag.gettoptracks&tag=${genderTag}&api_key=${this.apiKey}&format=json&limit=5`;
+  async getTopGenreTracks(GenreTag) {
+    const url = `?method=tag.gettoptracks&tag=${GenreTag}&api_key=${this.apiKey}&format=json&limit=5`;
     return this.getRequest(url);
   }
 
-  async getTopGenderAlbums(genderTag) {
-    const url = `?method=tag.gettopalbums&tag=${genderTag}&api_key=${this.apiKey}&format=json&limit=5`;
+  async getTopGenreAlbums(GenreTag) {
+    const url = `?method=tag.gettopalbums&tag=${GenreTag}&api_key=${this.apiKey}&format=json&limit=5`;
     return this.getRequest(url);
   }
 
@@ -66,8 +66,13 @@ class LastfmService {
     return this.getRequest(url);
   }
 
-  async getAlbumStats(albumArtist, albumName) {
+  async getAlbumInfo(albumArtist, albumName) {
     const url = `?method=album.getinfo&artist=${albumArtist}&album=${albumName}&api_key=${this.apiKey}&format=json`;
+    return this.getRequest(url);
+  }
+
+  async getTrackInfo(trackArtist, trackName) {
+    const url = `?method=track.getinfo&artist=${trackArtist}&track=${trackName}&api_key=${this.apiKey}&format=json`;
     return this.getRequest(url);
   }
 }

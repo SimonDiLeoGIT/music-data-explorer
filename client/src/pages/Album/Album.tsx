@@ -54,15 +54,15 @@ function Album() {
       </header>
       {
         insights &&
+        <ArtistData artist={insights?.artist} />
+      }
+      {
+        insights &&
         <AlbumCards insights={insights} />
       }
       {
         id && 
         <Tracks albumId={id} />
-      }
-      {
-        insights &&
-        <ArtistData artist={insights?.artist} />
       }
     </main>
   )

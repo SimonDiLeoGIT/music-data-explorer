@@ -1,29 +1,29 @@
 import LastfmService from "../services/lastfm.service.js";
 
-export async function getTopGenders(req, res) {
+export async function getTopGenres(req, res) {
   try {
-    const topGenders = await LastfmService.getTopGenders();
-    const reducedGenders = topGenders.tags.tag.map((gender) => ({
-      name: gender.name,
-      count: gender.taggings,
+    const topGenres = await LastfmService.getTopGenres();
+    const reducedGenres = topGenres.tags.tag.map((genre) => ({
+      name: genre.name,
+      count: genre.taggings,
     }));
-    res.json(reducedGenders);
+    res.json(reducedGenres);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
 
-export async function getTopGenderArtists(req, res) {
-  const genderTag = req.params.genderTag;
+export async function getTopGenreArtists(req, res) {
+  const genreTag = req.params.genreTag;
   try {
-    const topGenderArtist = await LastfmService.getTopGenderArtists(genderTag);
+    const topGenreArtist = await LastfmService.getTopGenreArtists(genreTag);
 
-    for (const artist of topGenderArtist.topartists.artist) {
+    for (const artist of topGenreArtist.topartists.artist) {
       const artistInfo = await LastfmService.getArtistInfo(artist.name);
       artist.stats = artistInfo.artist.stats;
     }
 
-    const reducedArtistsData = topGenderArtist.topartists.artist.map(
+    const reducedArtistsData = topGenreArtist.topartists.artist.map(
       (artist) => ({
         name: artist.name,
         apiUrl: artist.url,
@@ -39,12 +39,12 @@ export async function getTopGenderArtists(req, res) {
   }
 }
 
-export async function getTopGenderTracks(req, res) {
-  const genderTag = req.params.genderTag;
+export async function getTopGenreTracks(req, res) {
+  const genreTag = req.params.genreTag;
   try {
-    const topGenderTracks = await LastfmService.getTopGenderTracks(genderTag);
+    const topGenreTracks = await LastfmService.getTopGenreTracks(genreTag);
 
-    const reducedTracksData = topGenderTracks.tracks.track.map((track) => ({
+    const reducedTracksData = topGenreTracks.tracks.track.map((track) => ({
       name: track.name,
       artist: {
         name: track.artist.name,
@@ -60,12 +60,12 @@ export async function getTopGenderTracks(req, res) {
   }
 }
 
-export async function getTopGenderAlbums(req, res) {
-  const genderTag = req.params.genderTag;
+export async function getTopGenreAlbums(req, res) {
+  const genreTag = req.params.genreTag;
   try {
-    const topGenderAlbums = await LastfmService.getTopGenderAlbums(genderTag);
+    const topGenreAlbums = await LastfmService.getTopGenreAlbums(genreTag);
 
-    const reducedAlbumsData = topGenderAlbums.albums.album.map((album) => ({
+    const reducedAlbumsData = topGenreAlbums.albums.album.map((album) => ({
       name: album.name,
       artist: {
         name: album.artist.name,

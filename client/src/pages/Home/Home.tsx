@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { musicService } from "../../services/music.service";
-import type { AlbumInterface } from "../../interfaces/MusicInterfaces";
+import type { AlbumInterface } from "../../interfaces/AlbumInteface";
 import { Link } from "react-router-dom";
-import GendersInsights from "./components/GendersInsights";
+import GenresInsights from "./components/GenresInsights";
 
 const Home = () => {
 
@@ -39,7 +39,7 @@ const Home = () => {
           </div>
         ))}
       </section>
-      <GendersInsights />
+      <GenresInsights />
     </main>
   );
 }

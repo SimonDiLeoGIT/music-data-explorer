@@ -38,36 +38,36 @@ class MusicService {
     }
   }
 
-  async getTopGenders() {
+  async getTopGenres() {
     try {
-      const responseData = await getRequest(`/genders/top-ten`);
+      const responseData = await getRequest(`/genres/top-ten`);
       return responseData;
     } catch (error) {
       console.error('Error fetching track details:', error);
     }
   }
 
-  async getTopGenderArtists(genderTag: string) {
+  async getTopGenreArtists(genreTag: string) {
     try {
-      const responseData = await getRequest(`/genders/${genderTag}/top-artists`);
+      const responseData = await getRequest(`/Genres/${genreTag}/top-artists`);
       return responseData;
     } catch (error) {
       console.error('Error fetching track details:', error);
     }
   }
  
-  async getTopGenderTracks(genderTag: string) {
+  async getTopGenreTracks(genreTag: string) {
     try {
-      const responseData = await getRequest(`/genders/${genderTag}/top-tracks`);
+      const responseData = await getRequest(`/Genres/${genreTag}/top-tracks`);
       return responseData;
     } catch (error) {
       console.error('Error fetching track details:', error);
     }
   }
  
-  async getTopGenderAlbums(genderTag: string) {
+  async getTopGenreAlbums(genreTag: string) {
     try {
-      const responseData = await getRequest(`/genders/${genderTag}/top-albums`);
+      const responseData = await getRequest(`/Genres/${genreTag}/top-albums`);
       return responseData;
     } catch (error) {
       console.error('Error fetching track details:', error);

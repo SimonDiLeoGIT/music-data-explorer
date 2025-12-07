@@ -1,9 +1,9 @@
-export interface GenderInterface {
+export interface GenreInterface {
   name: string;
   count: number;
 }
 
-export interface TopGenderTagInterface {
+export interface TopGenreTagInterface {
   name: string;
   artist: {
     name: string;

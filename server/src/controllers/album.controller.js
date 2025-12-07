@@ -1,6 +1,6 @@
 import SpotifyService from "../services/spotify.service.js";
 import InsightsService from "../services/insights.service.js";
-import lastfmService from "../services/lastfm.service.js";
+import LastfmService from "../services/lastfm.service.js";
 
 const durationMsToTimeString = (durationMs) => {
   const totalSeconds = Math.floor(durationMs / 1000);
@@ -62,7 +62,7 @@ export async function albumInsights(req, res) {
     const reducedTracksInsights = tracksDetails.tracks.map(reduceTrackInfo);
 
     // Album Lasft fm data
-    const albumStats = await lastfmService.getAlbumStats(
+    const albumStats = await LastfmService.getAlbumInfo(
       albumData.artists[0].name,
       albumData.name
     );
@@ -73,7 +73,7 @@ export async function albumInsights(req, res) {
     };
 
     // Artist Last fm data
-    const artistInfo = await lastfmService.getArtistInfo(
+    const artistInfo = await LastfmService.getArtistInfo(
       albumStats.album.artist
     );
 
@@ -83,7 +83,7 @@ export async function albumInsights(req, res) {
     );
 
     const reducedArtistInfo = {
-      name: artistInfo.artist.name,
+      name: albumData.artists[0].name,
       listeners: artistInfo.artist.stats.listeners,
       playcount: artistInfo.artist.stats.playcount,
       bio: artistInfo.artist.bio.summary,
@@ -142,6 +142,7 @@ export async function albumTracks(req, res) {
     for (let i = 0; i < severalTracksDetails.tracks.length; i++) {
       reducedTracks.push(reduceTrackInfo(severalTracksDetails.tracks[i]));
     }
+
     if (sortBy === "duration") {
       if (sortOrder === "desc") {
         reducedTracks.sort((a, b) => b.duration.ms - a.duration.ms);
