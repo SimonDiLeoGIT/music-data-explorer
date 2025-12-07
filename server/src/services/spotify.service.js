@@ -102,6 +102,13 @@ class SpotifyService {
     return this.getRequest(`/albums/${albumId}/tracks`, { limit, offset });
   }
 
+  async getArtistData(artistId) {
+    if (!artistId) {
+      throw new Error("Artist ID is required");
+    }
+    return this.getRequest(`/artists/${artistId}`);
+  }
+
   async getTrackDetails(trackId) {
     if (!trackId) {
       throw new Error("Track ID is required");

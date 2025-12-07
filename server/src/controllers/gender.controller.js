@@ -18,11 +18,18 @@ export async function getTopGenderArtists(req, res) {
   try {
     const topGenderArtist = await LastfmService.getTopGenderArtists(genderTag);
 
+    for (const artist of topGenderArtist.topartists.artist) {
+      const artistInfo = await LastfmService.getArtistInfo(artist.name);
+      artist.stats = artistInfo.artist.stats;
+    }
+
     const reducedArtistsData = topGenderArtist.topartists.artist.map(
       (artist) => ({
         name: artist.name,
         apiUrl: artist.url,
         rank: artist["@attr"].rank,
+        stats: artist.stats,
+        image: artist.image[2]["#text"],
       })
     );
 

@@ -1,5 +1,6 @@
 import SpotifyService from "../services/spotify.service.js";
 import InsightsService from "../services/insights.service.js";
+import lastfmService from "../services/lastfm.service.js";
 
 const durationMsToTimeString = (durationMs) => {
   const totalSeconds = Math.floor(durationMs / 1000);
@@ -31,57 +32,86 @@ export async function albumInsights(req, res) {
   const albumId = req.params.id;
 
   try {
+    // Album Data
     const albumData = await SpotifyService.getAlbumData(albumId);
 
-    const albumTracks = albumData.tracks;
-
-    if (!albumTracks.items || albumTracks.items.length === 0) {
-      return res.status(404).json({ error: "No tracks found in album" });
-    }
-
-    const totalTracks = albumData.total_tracks;
-
-    const totalDuration = InsightsService.getAlbumDuration(albumTracks.items);
-
-    // Durations
-    const averageDuration =
-      InsightsService.getAlbumDuration(albumTracks.items) / totalTracks;
-    const longestTrack = InsightsService.getLongestTrack(albumTracks.items);
-    const shortestTrack = InsightsService.getShortestTrack(albumTracks.items);
-
-    const explicitTracks = InsightsService.albumExplicitTracks(
-      albumTracks.items
+    const totalDuration = InsightsService.getAlbumDuration(
+      albumData.tracks.items
     );
 
-    const trackIds = albumTracks.items.map((track) => track.id);
+    // Tracks Insights
+    const averageDuration =
+      InsightsService.getAlbumDuration(albumData.tracks.items) /
+      albumData.tracks.total;
+    const longestTrack = InsightsService.getLongestTrack(
+      albumData.tracks.items
+    );
+    const shortestTrack = InsightsService.getShortestTrack(
+      albumData.tracks.items
+    );
+
+    const explicitTracks = InsightsService.albumExplicitTracks(
+      albumData.tracks.items
+    );
+
+    const trackIds = albumData.tracks.items.map((track) => track.id);
     const tracksDetails = await SpotifyService.getSeveralTracksDetails(
       trackIds
     );
-    const reducedTracks = tracksDetails.tracks.map(reduceTrackInfo);
 
-    // Track Popularity
-    const average = InsightsService.albumPopularity(reducedTracks);
-    const mostPopularTrack = InsightsService.getMostPopularTrack(reducedTracks);
-    const leastPopularTrack =
-      InsightsService.getLeastPopularTrack(reducedTracks);
+    const reducedTracksInsights = tracksDetails.tracks.map(reduceTrackInfo);
+
+    // Album Lasft fm data
+    const albumStats = await lastfmService.getAlbumStats(
+      albumData.artists[0].name,
+      albumData.name
+    );
+
+    const reducedAlbumStats = {
+      listeners: albumStats.album.listeners,
+      playcount: albumStats.album.playcount,
+    };
+
+    // Artist Last fm data
+    const artistInfo = await lastfmService.getArtistInfo(
+      albumStats.album.artist
+    );
+
+    // Artist Spotify data
+    const artistData = await SpotifyService.getArtistData(
+      albumData.artists[0].id
+    );
+
+    const reducedArtistInfo = {
+      name: artistInfo.artist.name,
+      listeners: artistInfo.artist.stats.listeners,
+      playcount: artistInfo.artist.stats.playcount,
+      bio: artistInfo.artist.bio.summary,
+      image: artistData.images[0].url,
+    };
 
     const albumInsights = {
       id: albumData.id,
       name: albumData.name,
-      artist: albumData.artists.map((artist) => artist.name).join(", "),
+      artist: reducedArtistInfo,
       releaseDate: albumData.release_date.split("-")[0],
       cover: albumData.images,
-      totalTracks,
+      totalTracks: albumData.tracks.total,
       totalDuration: durationMsToTimeString(totalDuration),
       averageDuration,
       longestTrack: reduceTrackInfo(longestTrack),
       shortestTrack: reduceTrackInfo(shortestTrack),
       popularity: {
-        average: InsightsService.albumPopularity(reducedTracks),
-        mostPopularTrack: InsightsService.getMostPopularTrack(reducedTracks),
-        leastPopularTrack: InsightsService.getLeastPopularTrack(reducedTracks),
+        average: InsightsService.albumPopularity(reducedTracksInsights),
+        mostPopularTrack: InsightsService.getMostPopularTrack(
+          reducedTracksInsights
+        ),
+        leastPopularTrack: InsightsService.getLeastPopularTrack(
+          reducedTracksInsights
+        ),
       },
       explicitTracks,
+      stats: reducedAlbumStats,
     };
 
     res.json(albumInsights);
@@ -114,9 +144,9 @@ export async function albumTracks(req, res) {
     }
     if (sortBy === "duration") {
       if (sortOrder === "desc") {
-        reducedTracks.sort((a, b) => a.duration.ms - b.duration.ms);
-      } else {
         reducedTracks.sort((a, b) => b.duration.ms - a.duration.ms);
+      } else {
+        reducedTracks.sort((a, b) => a.duration.ms - b.duration.ms);
       }
     } else if (sortBy === "popularity") {
       if (sortOrder === "desc") {
@@ -178,6 +208,10 @@ export async function albumsPopularityInsights(req, res) {
 
     for (const album of albums.split(",")) {
       const albumData = await SpotifyService.getAlbumData(album);
+
+      if (!albumData) {
+        return res.status(404).json({ error: "Album not found" });
+      }
 
       const albumReducedData = {
         id: albumData.id,

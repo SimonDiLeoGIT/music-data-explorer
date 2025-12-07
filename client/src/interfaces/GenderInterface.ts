@@ -11,4 +11,9 @@ export interface TopGenderTagInterface {
   };
   apiUrl: string;
   rank: number;
+  image: string;
+  stats: {
+    listeners: number;
+    playcount: number;
+  };
 }

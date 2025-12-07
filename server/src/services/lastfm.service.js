@@ -60,6 +60,16 @@ class LastfmService {
     const url = `?method=tag.gettopalbums&tag=${genderTag}&api_key=${this.apiKey}&format=json&limit=5`;
     return this.getRequest(url);
   }
+
+  async getArtistInfo(artistName) {
+    const url = `?method=artist.getinfo&artist=${artistName}&api_key=${this.apiKey}&format=json`;
+    return this.getRequest(url);
+  }
+
+  async getAlbumStats(albumArtist, albumName) {
+    const url = `?method=album.getinfo&artist=${albumArtist}&album=${albumName}&api_key=${this.apiKey}&format=json`;
+    return this.getRequest(url);
+  }
 }
 
 export default new LastfmService();

@@ -1,4 +1,4 @@
-import type { AlbumInsightsInterface } from "../../../interfaces/MusicInterfaces"
+import type { AlbumInsightsInterface } from "../../../interfaces/AlbumInteface"
 
 interface Props {
   insights: AlbumInsightsInterface
@@ -6,7 +6,7 @@ interface Props {
 
 const AlbumCards: React.FC<Props> = ({insights}) => {
   return (
-    <section className="bg-zinc-700/80 p-4 text-zinc-100 flex w-full gap-2">
+    <section className="bg-zinc-700/80 p-4 text-zinc-100 grid grid-cols-2 gap-4">
        <section className="w-full flex gap-2 bg-zinc-900 p-2 rounded-md">
           <span className="h-full bg-purple-400 w-[1.5px]"></span>
           <article className="flex flex-col gap-1 w-1/3">

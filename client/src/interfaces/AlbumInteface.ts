@@ -1,7 +1,10 @@
+import type { ArtisInterface } from "./ArtistInterface"
+import type { TrackDurationInterface, TrackInterface } from "./TrackInterface"
+
 export interface AlbumInsightsInterface {
   id: string
   name: string
-  artist: string
+  artist: ArtisInterface
   releaseDate: string
   cover: AlbumCoverInterface[]
   totalTracks: number
@@ -10,6 +13,10 @@ export interface AlbumInsightsInterface {
   longestTrack: TrackInterface
   shortestTrack: TrackInterface
   popularity: AlbumsPopularityInsight
+  stats: {
+    listeners: number
+    playcount: number
+  }
 }
 
 interface AlbumsPopularityInsight {
@@ -32,18 +39,5 @@ interface AlbumCoverInterface {
   url: string
   width: number
   height: number
-}
-
-interface TrackDurationInterface {
-  ms: number
-  timeString: string
-}
-
-export interface TrackInterface {
-  id: string
-  name: string
-  duration: TrackDurationInterface
-  trackNumber: number
-  popularity: number
 }
 
