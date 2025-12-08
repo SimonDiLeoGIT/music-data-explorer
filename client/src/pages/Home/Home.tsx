@@ -11,7 +11,7 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchNewReleases = async () => {
-    const data =  await musicService.getNewReleases(6, 0);
+    const data =  await musicService.getNewReleases();
     setNewReleases(data);
   }
   
@@ -31,7 +31,7 @@ const Home = () => {
       <h1 className="text-3xl text-zinc-100 font-bold mb-4">New Releases <span className="text-zinc-400/70 text-xs">Albums</span></h1>
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
         {loading ? 
-          Array.from({ length: 6 }).map((_, index) => (
+          Array.from({ length: 12 }).map((_, index) => (
             <AlbumSkeleton key={index} />
           ))
           :

@@ -1,4 +1,5 @@
 import type { ArtisInterface } from "../../../interfaces/ArtistInterface"
+import { formatNumber, formatNumberWithCommas } from "../../../utils/formatNumbers"
 
 interface Props {
   artist: ArtisInterface
@@ -16,13 +17,29 @@ const ArtistData: React.FC<Props> = ({artist}) => {
         <BiographyText text={artist.bio} />
       </div>
       <div className="grid grid-cols-2 gap-2 m-auto p-2">
-        <article className="bg-zinc-900/50 p-4 rounded-md flex flex-col shadow-md">
+        <article className="bg-zinc-900/50 p-4 rounded-md flex flex-col shadow-md hover:cursor-default">
           <h2 className="font-semibold text-center">Listeners</h2>
-          <p className="font-semibold m-auto text-center">{artist.listeners}</p>
+          {
+            artist.listeners === null
+            ?
+            <p className="font-semibold m-auto text-center">-</p>
+            :
+            <p className="font-semibold m-auto text-center" title={formatNumberWithCommas(artist.listeners)}>
+              {formatNumber(artist.listeners)}
+            </p>
+          }
         </article>
-        <article className="bg-zinc-900/50 p-4 rounded-md flex flex-col gap-1 shadow-md">
+        <article className="bg-zinc-900/50 p-4 rounded-md flex flex-col gap-1 shadow-md hover:cursor-default">
           <h2 className="font-semibold text-center">Plays</h2>
-          <p className="font-semibold m-auto text-center">{artist.playcount}</p>
+          {
+            artist.playcount === null
+            ?
+            <p className="font-semibold m-auto text-center">-</p>
+            :
+            <p className="font-semibold m-auto text-center" title={formatNumberWithCommas(artist.playcount)}>
+              {formatNumber(artist.playcount)}
+            </p>
+          }
         </article>
       </div>
     </section>

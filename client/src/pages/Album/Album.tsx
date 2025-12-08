@@ -6,9 +6,9 @@ import { useParams } from "react-router-dom";
 import AlbumCards from "./components/AlbumCards";
 import ArtistData from "./components/ArtistData";
 import { AlbumCardsSkeleton, AlbumHeaderSkeleton, ArtistDataSkeleton, TracksSkeleton } from "../../components/Skeleton/AlbumSkeleton";
+import { formatNumber, formatNumberWithCommas } from "../../utils/formatNumbers";
 
-
-function Album() {
+const Album = () => {
 
   const { id } = useParams();
 
@@ -60,13 +60,29 @@ function Album() {
           </div>
         </section>
         <section className="absolute bottom-0 right-0 p-4 grid grid-cols-2 gap-4 z-50">
-          <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 shadow-md">
+          <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 shadow-md hover:cursor-default">
             <h2 className="text-lg font-semibold text-center">Listeners</h2>
-            <p className="font-semibold text-2xl text-purple-400 m-auto text-center">{insights?.stats.listeners}</p>
+            {
+              insights?.stats.listeners &&
+              <p 
+                className="font-semibold text-2xl text-purple-400 m-auto text-center"
+                title={formatNumberWithCommas(insights?.stats.listeners)}
+              >
+                {formatNumber(insights?.stats.listeners)}
+              </p>
+            }
           </article>
-          <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 place-content-center shadow-md">
+          <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 place-content-center shadow-md hover:cursor-default">
             <h2 className="text-lg font-semibold text-center">Plays</h2>
-            <p className="font-semibold text-2xl text-purple-400 m-auto text-center">{insights?.stats.playcount}</p>
+            {
+              insights?.stats.playcount &&
+              <p 
+                className="font-semibold text-2xl text-purple-400 m-auto text-center"
+                title={formatNumberWithCommas(insights?.stats.playcount)}
+              >
+                {formatNumber(insights?.stats.playcount)}
+              </p>
+            }
           </article>
        </section>
       </header>

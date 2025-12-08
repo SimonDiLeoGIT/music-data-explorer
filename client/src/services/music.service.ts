@@ -20,7 +20,7 @@ class MusicService {
     }
   }
 
-  async getNewReleases(limit: number = 10, offset: number = 0) {
+  async getNewReleases(limit: number = 12, offset: number = 0) {
     try {
       const responseData = await getRequest(`/albums/browse/new-releases`, { limit, offset });
       return responseData;
