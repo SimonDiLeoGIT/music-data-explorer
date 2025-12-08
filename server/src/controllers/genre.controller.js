@@ -18,10 +18,23 @@ export async function getTopGenreArtists(req, res) {
   try {
     const topGenreArtist = await LastfmService.getTopGenreArtists(genreTag);
 
-    for (const artist of topGenreArtist.topartists.artist) {
-      const artistInfo = await LastfmService.getArtistInfo(artist.name);
-      artist.stats = artistInfo.artist.stats;
-    }
+    await Promise.all(
+      topGenreArtist.topartists.artist.map(async (artist) => {
+        try {
+          const artistInfo = await LastfmService.getArtistInfo(artist.name);
+          artist.stats = artistInfo.artist.stats;
+        } catch (error) {
+          console.error(
+            `Error fetching stats for ${artist.name}:`,
+            error.message
+          );
+          album.stats = {
+            playcount: null,
+            listeners: null,
+          };
+        }
+      })
+    );
 
     const reducedArtistsData = topGenreArtist.topartists.artist.map(
       (artist) => ({
@@ -44,6 +57,30 @@ export async function getTopGenreTracks(req, res) {
   try {
     const topGenreTracks = await LastfmService.getTopGenreTracks(genreTag);
 
+    await Promise.all(
+      topGenreTracks.tracks.track.map(async (track) => {
+        try {
+          const trackInfo = await LastfmService.getTrackInfo(
+            track.name,
+            track.artist.name
+          );
+          track.stats = {
+            playcount: trackInfo.track.playcount,
+            listeners: trackInfo.track.listeners,
+          };
+        } catch (error) {
+          console.error(
+            `Error fetching stats for ${track.name}:`,
+            error.message
+          );
+          track.stats = {
+            playcount: null,
+            listeners: null,
+          };
+        }
+      })
+    );
+
     const reducedTracksData = topGenreTracks.tracks.track.map((track) => ({
       name: track.name,
       artist: {
@@ -52,6 +89,8 @@ export async function getTopGenreTracks(req, res) {
       },
       apiUrl: track.url,
       rank: track["@attr"].rank,
+      stats: track.stats,
+      image: track.image[2]["#text"],
     }));
 
     res.json(reducedTracksData);
@@ -65,6 +104,30 @@ export async function getTopGenreAlbums(req, res) {
   try {
     const topGenreAlbums = await LastfmService.getTopGenreAlbums(genreTag);
 
+    await Promise.all(
+      topGenreAlbums.albums.album.map(async (album) => {
+        try {
+          const albumInfo = await LastfmService.getAlbumInfo(
+            album.name,
+            album.artist.name
+          );
+          album.stats = {
+            playcount: albumInfo.album.playcount,
+            listeners: albumInfo.album.listeners,
+          };
+        } catch (error) {
+          console.error(
+            `Error fetching stats for ${album.name}:`,
+            error.message
+          );
+          album.stats = {
+            playcount: null,
+            listeners: null,
+          };
+        }
+      })
+    );
+
     const reducedAlbumsData = topGenreAlbums.albums.album.map((album) => ({
       name: album.name,
       artist: {
@@ -73,6 +136,7 @@ export async function getTopGenreAlbums(req, res) {
       },
       apiUrl: album.url,
       rank: album["@attr"].rank,
+      stats: album.stats,
     }));
 
     res.json(reducedAlbumsData);

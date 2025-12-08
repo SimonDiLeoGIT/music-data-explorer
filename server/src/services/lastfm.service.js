@@ -46,18 +46,18 @@ class LastfmService {
     return this.getRequest(url);
   }
 
-  async getTopGenreArtists(GenreTag) {
-    const url = `?method=tag.gettopartists&tag=${GenreTag}&api_key=${this.apiKey}&format=json&limit=5`;
+  async getTopGenreArtists(genreTag) {
+    const url = `?method=tag.gettopartists&tag=${genreTag}&api_key=${this.apiKey}&format=json&limit=5`;
     return this.getRequest(url);
   }
 
-  async getTopGenreTracks(GenreTag) {
-    const url = `?method=tag.gettoptracks&tag=${GenreTag}&api_key=${this.apiKey}&format=json&limit=5`;
+  async getTopGenreTracks(genreTag) {
+    const url = `?method=tag.gettoptracks&tag=${genreTag}&api_key=${this.apiKey}&format=json&limit=5`;
     return this.getRequest(url);
   }
 
-  async getTopGenreAlbums(GenreTag) {
-    const url = `?method=tag.gettopalbums&tag=${GenreTag}&api_key=${this.apiKey}&format=json&limit=5`;
+  async getTopGenreAlbums(genreTag) {
+    const url = `?method=tag.gettopalbums&tag=${genreTag}&api_key=${this.apiKey}&format=json&limit=5`;
     return this.getRequest(url);
   }
 

@@ -142,7 +142,7 @@ class SpotifyService {
     };
   }
 
-  async getNewReleases(limit = 10, offset = 0, country = "US") {
+  async getNewReleases(limit = 10, offset = 0, country = "AR") {
     if (limit > 50) limit = 50; // Límite de Spotify
     return this.getRequest(`/browse/new-releases`, {
       limit,

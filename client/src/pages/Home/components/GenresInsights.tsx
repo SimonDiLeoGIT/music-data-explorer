@@ -3,6 +3,7 @@ import { musicService } from "../../../services/music.service";
 import type { GenreInterface, TopGenreTagInterface } from "../../../interfaces/GenderInterface";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import BarChart from "../../../components/BarChart";
+import GenresInsightsSkeleton, { TopCardSkeleton, TopChartSkeleton, TopFiveListSkeleton } from "../../../components/Skeleton/GenresInsightsSkeleton";
 
 const GenresInsights = () => {
 
@@ -11,14 +12,18 @@ const GenresInsights = () => {
   const [genreArtists, setGenreArtists] = useState<TopGenreTagInterface[]>([]);
   const [genreTracks, setGenreTracks] = useState<TopGenreTagInterface[]>([]);
   const [genreAlbums, setGenreAlbums] = useState<TopGenreTagInterface[]>([]);
+  const [isLoadingGenres, setIsLoadingGenres] = useState(true);
+  const [isLoadingGenreData, setIsLoadingGenreData] = useState(true);
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchTopGenres = async () => {
+      setIsLoadingGenres(true);
       const data = await musicService.getTopGenres();
       setTopGenres(data);
       if (data.length > 0) {
         setCurrentGenre(data[0].name);
       }
+      setIsLoadingGenres(false);
     }
     fetchTopGenres();
   }, [])
@@ -26,85 +31,146 @@ const GenresInsights = () => {
   useEffect(() => {
     if (!currentGenre) return;
     
-    const fetchgenreArtists = async () => {
-      const data = await musicService.getTopGenreArtists(currentGenre);
-      setGenreArtists(data);
+    const fetchGenreData = async () => {
+      setIsLoadingGenreData(true);
+      
+      const [artists, tracks, albums] = await Promise.all([
+        musicService.getTopGenreArtists(currentGenre),
+        musicService.getTopGenreTracks(currentGenre),
+        musicService.getTopGenreAlbums(currentGenre)
+      ]);
+      
+      setGenreArtists(artists);
+      setGenreTracks(tracks);
+      setGenreAlbums(albums);
+      setIsLoadingGenreData(false);
     }
     
-    fetchgenreArtists();
-  }, [currentGenre])
-
-  useEffect(() => {
-    if (!currentGenre) return;
-    
-    const fetchGenreTracks = async () => {
-      const data = await musicService.getTopGenreTracks(currentGenre);
-      setGenreTracks(data);
-    }
-    
-    fetchGenreTracks();
-  }, [currentGenre])
-
-  useEffect(() => {
-    if (!currentGenre) return;
-    
-    const fetchGenreAlbums = async () => {
-      const data = await musicService.getTopGenreAlbums(currentGenre);
-      setGenreAlbums(data);
-    }
-    
-    fetchGenreAlbums();
+    fetchGenreData();
   }, [currentGenre])
 
   return (
     <section className="mt-4">
       <h2 className="text-zinc-100 text-2xl font-bold">Genres Insights</h2>
       <div className="mt-4 bg-zinc-900 p-4 rounded-md">
-        <div className="flex gap-4">
-          <div className="w-2/3 h-[500px]">
-            {
-              topGenres.length > 0 &&
-              <BarChart 
-                data={{
-                  labels: topGenres.map((genre) => genre.name),
-                  datasets: [
-                    {
-                      label: 'Genres tagged by users',
-                      data: topGenres.map((genre) => genre.count),
-                      backgroundColor: 'rgba(220, 30, 220, 0.3)',
-                      borderColor: 'rgba(220, 30, 220, 1)',
-                      borderWidth: 1,
-                      borderRadius: 2,
-                      barPercentage: 0.9,
-                      categoryPercentage: 1.0,
-                    },
-                  ],
-                  xTitle: 'Genres',
-                  yTitle: 'User Tagging',
-                }}
-                horizontal={false}
-                onClick={(genre) => setCurrentGenre(genre)}
-              />
-            }
-          </div>
-          <div className="flex-1 flex flex-col justify-center gap-4">
-              <TopCard top={genreArtists[0]} model="Artist" />
-              <TopCard top={genreTracks[0]} model="Track" />
-              <TopCard top={genreAlbums[0]} model="Album" />
-          </div>
-        </div>
-        <p className="text-zinc-400 text-xs mt-2">Click on a genre bar to see the top artists, tracks and albums</p>
-        <div className="grid grid-cols-3 gap-4 mt-4 bg-zinc-900 p-4 rounded-md">
-            <TopFiveCards topFive={genreArtists} model="Artist" currentGenre={currentGenre} />
-            <TopFiveCards topFive={genreAlbums} model="Album" currentGenre={currentGenre} />
-            <TopFiveCards topFive={genreTracks} model="Track" currentGenre={currentGenre} />
-        </div>
+        <p className="text-zinc-400 text-xs mt-2">Data sourced from Last.fm's top user-tagged genres</p>
+        {isLoadingGenres ? (
+          <GenresInsightsSkeleton />
+        ) : (
+          <>
+            <div className="flex gap-4">
+              <div className="w-2/3 h-[500px]">
+                {topGenres.length > 0 && (
+                  <BarChart 
+                    data={{
+                      labels: topGenres.map((genre) => 
+                        genre.name.length > 20 ? genre.name.substring(0, 10) + '...' : genre.name
+                      ),
+                      datasets: [
+                        {
+                          label: 'Genres tagged by users',
+                          data: topGenres.map((genre) => genre.count),
+                          backgroundColor: 'rgba(220, 30, 220, 0.3)',
+                          borderColor: 'rgba(220, 30, 220, 1)',
+                          borderWidth: 1,
+                          borderRadius: 2,
+                          barPercentage: 0.9,
+                          categoryPercentage: 1.0,
+                        },
+                      ],
+                      xTitle: 'Genres',
+                      yTitle: 'User Tagging',
+                    }}
+                    horizontal={false}
+                    onClick={(genre) => setCurrentGenre(genre)}
+                  />
+                )}
+              </div>
+              <div className="flex-1 flex flex-col justify-center gap-4">
+                {isLoadingGenreData ? (
+                  <>
+                    <TopCardSkeleton />
+                    <TopCardSkeleton />
+                    <TopCardSkeleton />
+                  </>
+                ) : (
+                  <>
+                    <TopCard top={genreArtists[0]} model="Artist" />
+                    <TopCard top={genreTracks[0]} model="Track" />
+                    <TopCard top={genreAlbums[0]} model="Album" />
+                  </>
+                )}
+              </div>
+            </div>
+            <p className="text-zinc-400 text-xs mt-2">Click on a genre bar to see the top artists, tracks and albums</p>
+            <div className="grid grid-cols-3 gap-4 mt-4 bg-zinc-900 p-4 rounded-md">
+              {isLoadingGenreData ? (
+                <>
+                  <TopFiveListSkeleton />
+                  <TopFiveListSkeleton />
+                  <TopFiveListSkeleton />
+                </>
+              ) : (
+                <>
+                  <TopFiveList topFive={genreArtists} model="Artist" currentGenre={currentGenre} />
+                  <TopFiveList topFive={genreAlbums} model="Album" currentGenre={currentGenre} />
+                  <TopFiveList topFive={genreTracks} model="Track" currentGenre={currentGenre} />
+                </>
+              )}
+            </div>
+            <div className="grid grid-cols-3 gap-4 p-4">
+              {isLoadingGenreData ? (
+                <>
+                  <TopChartSkeleton />
+                  <TopChartSkeleton />
+                  <TopChartSkeleton />
+                </>
+              ) : (
+                <>
+                  <TopChart top={genreArtists} model="Artist" />
+                  <TopChart top={genreAlbums} model="Album" />
+                  <TopChart top={genreTracks} model="Track" />
+                </>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </section>
   )
 }
 
-const TopFiveCards: React.FC<{ topFive: TopGenreTagInterface[], model: string, currentGenre: string}> = ({ topFive, model, currentGenre }) => {
+const TopChart: React.FC<{ top: TopGenreTagInterface[], model: string }> = ({ top, model }) => {
+  return (
+    <div className="h-[400px]">
+      <BarChart 
+        data={{
+          labels: top.map((tag) => 
+            tag.name.length > 20 ? tag.name.substring(0, 10) + '...' : tag.name
+          ),
+          datasets: [
+            {
+              label: 'Listeners by ' + model,
+              data: top.map((tag) => tag.stats.listeners),
+              backgroundColor: 'rgba(220, 30, 220, 0.3)',
+              borderColor: 'rgba(220, 30, 220, 1)',
+              borderWidth: 1,
+              borderRadius: 2,
+              barPercentage: 0.9,
+              categoryPercentage: 1.0,
+            }
+          ],
+          xTitle: model,
+          yTitle: 'Listeners',
+        }}
+        horizontal={false}
+        onClick={() => {}}
+      />
+    </div>
+  )
+}
+
+const TopFiveList: React.FC<{ topFive: TopGenreTagInterface[], model: string, currentGenre: string}> = ({ topFive, model, currentGenre }) => {
   // Asegurar que siempre haya 5 elementos
   const displayTopFive = Array.from({ length: 5 }, (_, index) => topFive[index] || null);
   
