@@ -41,3 +41,9 @@ interface AlbumCoverInterface {
   height: number
 }
 
+export interface AlbumSearchResultInterface {
+  id: string
+  name: string
+  artist: string
+  cover: AlbumCoverInterface[]
+}

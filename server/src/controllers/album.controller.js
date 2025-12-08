@@ -243,3 +243,21 @@ export async function albumsPopularityInsights(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+
+export async function search(req, res) {
+  const query = req.query.query;
+  try {
+    const searchResults = await SpotifyService.search(query, 10);
+
+    const reducedAlbums = searchResults.albums.items.map((album) => ({
+      id: album.id,
+      name: album.name,
+      artist: album.artists.map((artist) => artist.name).join(", "),
+      cover: album.images,
+    }));
+
+    res.json(reducedAlbums);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}

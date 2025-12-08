@@ -151,9 +151,13 @@ class SpotifyService {
     });
   }
 
-  async searchAlbums(query, limit = 10) {
+  async search(query, limit = 10) {
+    if (!query || query.trim() === "") {
+      return { albums: { items: [] } };
+    }
+
     return this.getRequest(`/search`, {
-      q: query,
+      q: query.trim(),
       type: "album",
       limit,
     });

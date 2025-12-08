@@ -49,7 +49,7 @@ class MusicService {
 
   async getTopGenreArtists(genreTag: string) {
     try {
-      const responseData = await getRequest(`/Genres/${genreTag}/top-artists`);
+      const responseData = await getRequest(`/genres/${genreTag}/top-artists`);
       return responseData;
     } catch (error) {
       console.error('Error fetching track details:', error);
@@ -58,7 +58,7 @@ class MusicService {
  
   async getTopGenreTracks(genreTag: string) {
     try {
-      const responseData = await getRequest(`/Genres/${genreTag}/top-tracks`);
+      const responseData = await getRequest(`/genres/${genreTag}/top-tracks`);
       return responseData;
     } catch (error) {
       console.error('Error fetching track details:', error);
@@ -67,13 +67,21 @@ class MusicService {
  
   async getTopGenreAlbums(genreTag: string) {
     try {
-      const responseData = await getRequest(`/Genres/${genreTag}/top-albums`);
+      const responseData = await getRequest(`/genres/${genreTag}/top-albums`);
       return responseData;
     } catch (error) {
       console.error('Error fetching track details:', error);
     }
   }
 
+  async search(query: string) {
+    try {
+      const responseData = await getRequest(`/albums/search`, { query });
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching track details:', error);
+    }
+  }
 }
 
 export const musicService = new MusicService();
