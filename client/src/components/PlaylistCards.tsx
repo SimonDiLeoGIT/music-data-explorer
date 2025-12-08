@@ -1,17 +1,17 @@
-import type { AlbumInsightsInterface } from "../../../interfaces/AlbumInteface"
+import type { InsightsInterface } from "../interfaces/InisightsInterfaces"
 
 interface Props {
-  insights: AlbumInsightsInterface
+  insights: InsightsInterface
 }
 
-const AlbumCards: React.FC<Props> = ({insights}) => {
+const PlaylistCards: React.FC<Props> = ({insights}) => {
   return (
     <section className="bg-zinc-700/80 p-4 text-zinc-100 grid grid-cols-2 gap-4">
        <section className="w-full flex gap-2 bg-zinc-900 p-2 rounded-md">
           <span className="h-full bg-purple-400 w-[1.5px]"></span>
           <article className="flex flex-col gap-1 w-1/3">
             <h2 className="text-lg font-semibold">Total Duration</h2>
-            <p className="font-semibold text-2xl text-purple-400 m-auto">{insights?.totalDuration}</p>
+            <p className="font-semibold text-2xl text-purple-400 m-auto">{insights?.time.totalDuration}</p>
           </article>
           <div className="flex flex-col gap-2 flex-1">
             <article className="flex gap-2 bg-zinc-900 p-2 rounded-md">
@@ -19,8 +19,8 @@ const AlbumCards: React.FC<Props> = ({insights}) => {
               <div className="flex flex-col gap-1 w-full">
                 <h2 className="text-lg font-semibold">Longest Track</h2>
                 <div className="flex gap-2 items-center">
-                  <p className="flex-1 text-sm">{insights?.longestTrack.name}</p>
-                  <p className="font-semibold text-purple-400 justify-self-end px-2">{insights?.longestTrack.duration.timeString}</p>
+                  <p className="flex-1 text-sm">{insights?.time.longestTrack.name}</p>
+                  <p className="font-semibold text-purple-400 justify-self-end px-2">{insights?.time.longestTrack.duration.timeString}</p>
                 </div>
               </div>
             </article>
@@ -29,8 +29,8 @@ const AlbumCards: React.FC<Props> = ({insights}) => {
               <div className="flex flex-col gap-1 w-full">
                 <h2 className="text-lg font-semibold">Shortest Track</h2>
                 <div className="flex gap-2 items-center">
-                  <p className="flex-1 text-sm">{insights?.shortestTrack.name}</p>
-                  <p className="font-semibold text-purple-400 justify-self-end px-2">{insights?.shortestTrack.duration.timeString}</p>
+                  <p className="flex-1 text-sm">{insights?.time.shortestTrack.name}</p>
+                  <p className="font-semibold text-purple-400 justify-self-end px-2">{insights?.time.shortestTrack.duration.timeString}</p>
                 </div>
               </div>
             </article>
@@ -69,4 +69,4 @@ const AlbumCards: React.FC<Props> = ({insights}) => {
   )
 }
 
-export default AlbumCards
+export default PlaylistCards

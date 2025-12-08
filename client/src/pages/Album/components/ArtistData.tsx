@@ -1,8 +1,8 @@
-import type { ArtisInterface } from "../../../interfaces/ArtistInterface"
+import type { ArtistInterface } from "../../../interfaces/ArtistInterface"
 import { formatNumber, formatNumberWithCommas } from "../../../utils/formatNumbers"
 
 interface Props {
-  artist: ArtisInterface
+  artist: ArtistInterface
 }
 
 const ArtistData: React.FC<Props> = ({artist}) => {

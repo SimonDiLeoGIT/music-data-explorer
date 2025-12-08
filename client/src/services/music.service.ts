@@ -76,11 +76,15 @@ class MusicService {
 
   async search(query: string) {
     try {
-      const responseData = await getRequest(`/albums/search`, { query });
+      const responseData = await getRequest(`/search`, { query });
       return responseData;
     } catch (error) {
       console.error('Error fetching track details:', error);
     }
+  }
+
+  async getPlaylistInsights(playlistId: string) {
+    return getRequest(`/playlists/${playlistId}/insights`);
   }
 }
 

@@ -4,6 +4,7 @@ export interface TrackInterface {
   duration: TrackDurationInterface
   trackNumber: number
   popularity: number
+  explicit: boolean
 }
 
 export interface TrackDurationInterface {

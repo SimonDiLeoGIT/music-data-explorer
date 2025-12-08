@@ -151,15 +151,37 @@ class SpotifyService {
     });
   }
 
-  async search(query, limit = 10) {
+  async search(query, limit = 5) {
     if (!query || query.trim() === "") {
-      return { albums: { items: [] } };
+      return {
+        albums: { items: [] },
+        playlists: { items: [] },
+        artists: { items: [] },
+      };
     }
 
     return this.getRequest(`/search`, {
       q: query.trim(),
-      type: "album",
+      type: "album,playlist,artist",
       limit,
+    });
+  }
+
+  async getPlaylistData(playlistId) {
+    if (!playlistId) {
+      throw new Error("Playlist ID is required");
+    }
+    return this.getRequest(`/playlists/${playlistId}`);
+  }
+
+  async getPlaylistItems(playlistId, limit = 50, offset = 0) {
+    if (!playlistId) {
+      throw new Error("Playlist ID is required");
+    }
+
+    return this.getRequest(`/playlists/${playlistId}/tracks`, {
+      limit,
+      offset,
     });
   }
 }

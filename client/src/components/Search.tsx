@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { musicService } from "../services/music.service";
-import type { AlbumSearchResultInterface } from "../interfaces/AlbumInteface";
 import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
+import type { SearchResultInterface } from "../interfaces/Search";
 
 const Search = () => {
 
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<AlbumSearchResultInterface[]>([]);
+  const [results, setResults] = useState<SearchResultInterface|null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (!query) {
-      setResults([]);
+      setResults(null);
       setIsOpen(false);
       return;
     }
@@ -38,7 +38,7 @@ const Search = () => {
 
   const handleSelect = () => {
     setQuery('');
-    setResults([]);
+    setResults(null);
     setIsOpen(false);
   }
 
@@ -61,20 +61,55 @@ const Search = () => {
           {
             isOpen && (
               <div className="absolute w-[460px] z-50 text-start bg-zinc-800 max-h-96 overflow-y-scroll p-2 mt-1.5 rounded-md shadow-md space-y-1">
-                {results?.map((result) => (
-                  <Link 
-                    to={`/albums/${result?.id}`} 
+                <div>
+                  <p className="font-semibold text-sm p-2 border-b border-zinc-700/50">Albums</p>
+                  {results?.albums.map((album) => (
+                    <Link 
+                    to={`/albums/${album?.id}`} 
                     onClick={handleSelect}
-                    key={result?.id} 
-                    className="flex gap-2 font-semibold text-sm hover:bg-zinc-700/80 p-2 rounded-md hover:cursor-pointer"
-                  >
-                    <img src={result?.cover[0].url} alt="Album Cover" className="w-12 h-12 rounded"/>
-                    <div className="m-auto ml-0 space-y-1">
-                      <p>{result?.name}</p>
-                      <p className="text-zinc-400">{result?.artist}</p>
-                    </div>
-                  </Link>
-                ))}
+                      key={album?.id} 
+                      className="flex gap-2 font-semibold text-sm hover:bg-zinc-700/80 p-2 rounded-md hover:cursor-pointer"
+                    >
+                      <img src={album?.cover} alt="Album Cover" className="w-12 h-12 rounded"/>
+                      <div className="m-auto ml-0 space-y-1">
+                        <p>{album.name}</p>
+                        <p className="text-zinc-400">{album.artist}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+                <div>
+                  <p className="font-semibold text-sm p-2 border-b border-zinc-700/50">Playlists</p>
+                  {results?.playlists.map((playlist) => (
+                    <Link 
+                    to={`/playlists/${playlist?.id}`} 
+                    onClick={handleSelect}
+                      key={playlist?.id} 
+                      className="flex gap-2 font-semibold text-sm hover:bg-zinc-700/80 p-2 rounded-md hover:cursor-pointer"
+                    >
+                      <img src={playlist?.cover} alt="Album Cover" className="w-12 h-12 rounded"/>
+                      <div className="m-auto ml-0 space-y-1">
+                        <p>{playlist.name}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+                <div>
+                  <p className="font-semibold text-sm p-2 border-b border-zinc-700/50">Artists</p>
+                  {results?.artists.map((artist) => (
+                    <Link 
+                      to={`/artists/${artist?.id}`} 
+                      onClick={handleSelect}
+                      key={artist?.id} 
+                      className="flex gap-2 font-semibold text-sm hover:bg-zinc-700/80 p-2 rounded-md hover:cursor-pointer"
+                    >
+                      <img src={artist?.image} alt="Album Cover" className="w-12 h-12 rounded-full"/>
+                      <div className="m-auto ml-0 space-y-1">
+                        <p>{artist.name}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
             )
           }

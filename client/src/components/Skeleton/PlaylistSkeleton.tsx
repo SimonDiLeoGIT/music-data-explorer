@@ -1,4 +1,4 @@
-export const AlbumHeaderSkeleton = () => {
+export const PlaylistHeaderSkeleton = () => {
   return (
     <header className="bg-zinc-800 p-4 rounded-t-md relative overflow-hidden">
       <div className="absolute inset-0 bg-zinc-900/50" />
@@ -52,7 +52,7 @@ export const ArtistDataSkeleton = () => {
   );
 };
 
-export const AlbumCardsSkeleton = () => {
+export const PlaylistCardsSkeleton = () => {
   return (
     <section className="bg-zinc-700/80 p-4 text-zinc-100 grid grid-cols-2 gap-4">
       {/* Total Duration Card */}

@@ -1,18 +1,7 @@
 import SpotifyService from "../services/spotify.service.js";
 import InsightsService from "../services/insights.service.js";
 import LastfmService from "../services/lastfm.service.js";
-
-const durationMsToTimeString = (durationMs) => {
-  const totalSeconds = Math.floor(durationMs / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`;
-  }
-  return `${minutes}m ${seconds.toString().padStart(2, "0")}s`;
-};
+import { durationMsToTimeString } from "../utils/TimeFormater.js";
 
 function reduceTrackInfo(track) {
   return {
@@ -35,18 +24,7 @@ export async function albumInsights(req, res) {
     // Album Data
     const albumData = await SpotifyService.getAlbumData(albumId);
 
-    const totalDuration = InsightsService.getAlbumDuration(
-      albumData.tracks.items
-    );
-
-    // Tracks Insights
-    const averageDuration =
-      InsightsService.getAlbumDuration(albumData.tracks.items) /
-      albumData.tracks.total;
-    const longestTrack = InsightsService.getLongestTrack(
-      albumData.tracks.items
-    );
-    const shortestTrack = InsightsService.getShortestTrack(
+    const albumTimeInsights = InsightsService.albumTimeInsights(
       albumData.tracks.items
     );
 
@@ -59,7 +37,9 @@ export async function albumInsights(req, res) {
       trackIds
     );
 
-    const reducedTracksInsights = tracksDetails.tracks.map(reduceTrackInfo);
+    const albumPopulatiryInsights = InsightsService.albumPopulatiryInsights(
+      tracksDetails.tracks
+    );
 
     // Album Lasft fm data
     const albumStats = await LastfmService.getAlbumInfo(
@@ -95,19 +75,23 @@ export async function albumInsights(req, res) {
       name: albumData.name,
       artist: reducedArtistInfo,
       releaseDate: albumData.release_date.split("-")[0],
-      cover: albumData.images,
+      cover: albumData.images[0].url,
       totalTracks: albumData.tracks.total,
-      totalDuration: durationMsToTimeString(totalDuration),
-      averageDuration,
-      longestTrack: reduceTrackInfo(longestTrack),
-      shortestTrack: reduceTrackInfo(shortestTrack),
-      popularity: {
-        average: InsightsService.albumPopularity(reducedTracksInsights),
-        mostPopularTrack: InsightsService.getMostPopularTrack(
-          reducedTracksInsights
+      time: {
+        totalDuration: durationMsToTimeString(albumTimeInsights.totalDuration),
+        averageDuration: durationMsToTimeString(
+          albumTimeInsights.averageDuration
         ),
-        leastPopularTrack: InsightsService.getLeastPopularTrack(
-          reducedTracksInsights
+        longestTrack: reduceTrackInfo(albumTimeInsights.longestTrack),
+        shortestTrack: reduceTrackInfo(albumTimeInsights.shortestTrack),
+      },
+      popularity: {
+        average: albumPopulatiryInsights.popularityAverage,
+        mostPopularTrack: reduceTrackInfo(
+          albumPopulatiryInsights.mostPopularTrack
+        ),
+        leastPopularTrack: reduceTrackInfo(
+          albumPopulatiryInsights.leastPopularTrack
         ),
       },
       explicitTracks,
@@ -239,24 +223,6 @@ export async function albumsPopularityInsights(req, res) {
     }
 
     res.json(albumsPopularity);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-}
-
-export async function search(req, res) {
-  const query = req.query.query;
-  try {
-    const searchResults = await SpotifyService.search(query, 10);
-
-    const reducedAlbums = searchResults.albums.items.map((album) => ({
-      id: album.id,
-      name: album.name,
-      artist: album.artists.map((artist) => artist.name).join(", "),
-      cover: album.images,
-    }));
-
-    res.json(reducedAlbums);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

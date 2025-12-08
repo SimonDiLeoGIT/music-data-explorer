@@ -1,55 +1,124 @@
 class InsightsService {
-  getAlbumDuration(albumTracks) {
-    if (!albumTracks || albumTracks.length === 0) {
+  albumTimeInsights(items) {
+    if (!items || items.length === 0) {
       return 0;
     }
-    return albumTracks.reduce((total, track) => total + track.duration_ms, 0);
-  }
-
-  getLongestTrack(albumTracks) {
-    return albumTracks.reduce(
-      (max, track) => (track.duration_ms > max.duration_ms ? track : max),
-      albumTracks[0]
-    );
-  }
-
-  getShortestTrack(albumTracks) {
-    return albumTracks.reduce(
-      (min, track) => (track.duration_ms < min.duration_ms ? track : min),
-      albumTracks[0]
-    );
-  }
-
-  getMostPopularTrack(albumTracks) {
-    return albumTracks.reduce(
-      (max, track) => (track.popularity > max.popularity ? track : max),
-      albumTracks[0]
-    );
-  }
-
-  getLeastPopularTrack(albumTracks) {
-    return albumTracks.reduce(
-      (min, track) => (track.popularity < min.popularity ? track : min),
-      albumTracks[0]
-    );
-  }
-
-  albumPopularity(albumTracks) {
-    if (!albumTracks || albumTracks.length === 0) {
-      return 0;
-    }
-    const totalPopularity = albumTracks.reduce(
-      (total, track) => total + track.popularity,
+    const totalDuration = items.reduce(
+      (total, item) => total + item.duration_ms,
       0
     );
-    return Math.round(totalPopularity / albumTracks.length);
+    const averageDuration = Math.round(totalDuration / items.length);
+    const longestTrack = items.reduce(
+      (max, item) => (item.duration_ms > max.duration_ms ? item : max),
+      items[0]
+    );
+    const shortestTrack = items.reduce(
+      (min, item) => (item.duration_ms < min.duration_ms ? item : min),
+      items[0]
+    );
+    return {
+      totalDuration,
+      averageDuration,
+      longestTrack,
+      shortestTrack,
+    };
   }
 
-  albumExplicitTracks(albumTracks) {
-    if (!albumTracks || albumTracks.length === 0) {
+  albumPopulatiryInsights(items) {
+    if (!items || items.length === 0) {
       return 0;
     }
-    return albumTracks.filter((track) => track.explicit).length;
+    const totalPopularity = items.reduce(
+      (total, item) => total + item.popularity,
+      0
+    );
+    const popularityAverage = Math.round(totalPopularity / items.length);
+    const mostPopularTrack = items.reduce(
+      (max, item) => (item.popularity > max.popularity ? item : max),
+      items[0]
+    );
+
+    const leastPopularTrack = items.reduce(
+      (min, item) => (item.popularity < min.popularity ? item : min),
+      items[0]
+    );
+
+    return {
+      totalPopularity,
+      popularityAverage,
+      mostPopularTrack,
+      leastPopularTrack,
+    };
+  }
+
+  albumExplicitTracks(items) {
+    if (!items || items.length === 0) {
+      return 0;
+    }
+    return items.filter((item) => item.explicit).length;
+  }
+
+  playlistTimeInsights(items) {
+    if (!items || items.length === 0) {
+      return 0;
+    }
+    const totalDuration = items.reduce(
+      (total, item) => total + item.track.duration_ms,
+      0
+    );
+    const averageDuration = Math.round(totalDuration / items.length);
+    const longestTrack = items.reduce(
+      (max, item) =>
+        item.track.duration_ms > max.duration_ms ? item.track : max,
+      items[0].track
+    );
+    const shortestTrack = items.reduce(
+      (min, item) =>
+        item.track.duration_ms < min.duration_ms ? item.track : min,
+      items[0].track
+    );
+    return {
+      totalDuration,
+      averageDuration,
+      longestTrack,
+      shortestTrack,
+    };
+  }
+
+  playlistPopulatiryInsights(items) {
+    if (!items || items.length === 0) {
+      return 0;
+    }
+    const totalPopularity = items.reduce(
+      (total, item) => total + item.track.popularity,
+      0
+    );
+    const popularityAverage = Math.round(totalPopularity / items.length);
+    const mostPopularTrack = items.reduce(
+      (max, item) =>
+        item.track.popularity > max.popularity ? item.track : max,
+      items[0].track
+    );
+
+    const leastPopularTrack = items.reduce(
+      (min, item) =>
+        item.track.popularity < min.popularity ? item.track : min,
+      items[0].track
+    );
+
+    return {
+      totalPopularity,
+      popularityAverage,
+      mostPopularTrack,
+      leastPopularTrack,
+    };
+  }
+
+  playlistExplicitTracks(items) {
+    if (!items || items.length === 0) {
+      return 0;
+    }
+    return items.filter((item) => item.track.explicit).length;
   }
 }
 
