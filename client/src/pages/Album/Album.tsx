@@ -5,6 +5,7 @@ import Tracks from "./components/Tracks";
 import { useParams } from "react-router-dom";
 import AlbumCards from "./components/AlbumCards";
 import ArtistData from "./components/ArtistData";
+import { AlbumCardsSkeleton, AlbumHeaderSkeleton, ArtistDataSkeleton, TracksSkeleton } from "../../components/Skeleton/AlbumSkeleton";
 
 
 function Album() {
@@ -12,19 +13,36 @@ function Album() {
   const { id } = useParams();
 
   const [insights, setInsights] = useState<AlbumInsightsInterface|null>(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
     if (!id) return;
-    const data =  await musicService.getAlbumInsights(id);
-    setInsights(data);
+    setLoading(true);
+    try {
+      const data = await musicService.getAlbumInsights(id);
+      setInsights(data);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
     fetchData();
   }, [id])
 
+  if (loading) {
+    return (
+      <main className='p-8 py-4 w-11/12 max-w-[1600px] mx-auto'>
+        <AlbumHeaderSkeleton />
+        <ArtistDataSkeleton />
+        <AlbumCardsSkeleton />
+        <TracksSkeleton />
+      </main>
+    );
+  }
+
   return( 
-    <main className='p-8 w-11/12 max-w-[1600px] mx-auto'>
+    <main className='p-8 py-4 w-11/12 max-w-[1600px] mx-auto'>
       <header className="bg-zinc-800 p-4 rounded-t-md relative overflow-hidden">
         {
           insights?.cover &&
@@ -34,19 +52,19 @@ function Album() {
           />
         }
         <section className="flex relative z-10">
-          <img src={insights?.cover[0].url} alt="Album Cover" className="w-64 h-64"/>
+          <img src={insights?.cover[0].url} alt="Album Cover" className="w-64 h-64 rounded"/>
           <div className="m-auto mb-0 ml-4 text-zinc-100 font-semibold flex flex-col gap-2">
             <p className="text-sm">Album</p>
             <p className="text-5xl">{insights?.name}</p>
             <p className="text-sm">{insights?.artist.name} <span className="text-zinc-400">&bull; {insights?.releaseDate} &bull; {insights?.totalTracks} songs, {insights?.totalDuration}</span></p>
           </div>
         </section>
-        <section className="absolute bottom-4 right-4 grid grid-cols-2 gap-4 z-50">
-          <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1">
+        <section className="absolute bottom-0 right-0 p-4 grid grid-cols-2 gap-4 z-50">
+          <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 shadow-md">
             <h2 className="text-lg font-semibold text-center">Listeners</h2>
             <p className="font-semibold text-2xl text-purple-400 m-auto text-center">{insights?.stats.listeners}</p>
           </article>
-          <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 place-content-center">
+          <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 place-content-center shadow-md">
             <h2 className="text-lg font-semibold text-center">Plays</h2>
             <p className="font-semibold text-2xl text-purple-400 m-auto text-center">{insights?.stats.playcount}</p>
           </article>

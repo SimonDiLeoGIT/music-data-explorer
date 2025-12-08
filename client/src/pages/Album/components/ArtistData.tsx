@@ -9,18 +9,18 @@ const ArtistData: React.FC<Props> = ({artist}) => {
   return (
     <section className="bg-zinc-700 p-2 text-sm flex gap-2">
       <div className="w-10/12">
-        <img src={artist.image} alt={artist.name + 's image '} className="w-8 h-8 rounded-full float-left mr-2"/>
-        <p className="">
-          <span className="font-semibold">{artist.name}: </span>
-          <BiographyText text={artist.bio} />
-        </p>
+        <div className="flex items-center">
+          <img src={artist.image} alt={artist.name + 's image '} className="w-8 h-8 rounded-full float-left mr-2"/>
+          <span className="font-semibold">{artist.name}</span>
+        </div>
+        <BiographyText text={artist.bio} />
       </div>
-      <div className="grid grid-cols-2 gap-2 m-auto">
-        <article className="bg-zinc-900/50 p-4 rounded-md flex flex-col">
+      <div className="grid grid-cols-2 gap-2 m-auto p-2">
+        <article className="bg-zinc-900/50 p-4 rounded-md flex flex-col shadow-md">
           <h2 className="font-semibold text-center">Listeners</h2>
           <p className="font-semibold m-auto text-center">{artist.listeners}</p>
         </article>
-        <article className="bg-zinc-900/50 p-4 rounded-md flex flex-col gap-1">
+        <article className="bg-zinc-900/50 p-4 rounded-md flex flex-col gap-1 shadow-md">
           <h2 className="font-semibold text-center">Plays</h2>
           <p className="font-semibold m-auto text-center">{artist.playcount}</p>
         </article>

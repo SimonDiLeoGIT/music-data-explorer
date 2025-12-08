@@ -51,7 +51,7 @@ const GenresInsights = () => {
 
   return (
     <section className="mt-4">
-      <h2 className="text-zinc-100 text-2xl font-bold">Genres Insights</h2>
+      <h2 className="text-zinc-100 text-3xl font-bold">Genres Insights</h2>
       <div className="mt-4 bg-zinc-900 p-4 rounded-md">
         <p className="text-zinc-400 text-xs mt-2">Data sourced from Last.fm's top user-tagged genres</p>
         {isLoadingGenres ? (
