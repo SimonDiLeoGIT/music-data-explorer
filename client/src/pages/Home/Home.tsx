@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { musicService } from "../../services/music.service";
-import type { AlbumInterface } from "../../interfaces/AlbumInteface";
+import type { NewReleaseInterface } from "../../interfaces/AlbumInteface";
 import { Link } from "react-router-dom";
 import GenresInsights from "./components/GenresInsights";
 import AlbumSkeleton from "../../components/Skeleton/AlbumReleasesSkeleton";
 
 const Home = () => {
 
-  const [newReleases, setNewReleases] = useState<AlbumInterface[]>([]);
+  const [newReleases, setNewReleases] = useState<NewReleaseInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchNewReleases = async () => {
@@ -38,7 +38,7 @@ const Home = () => {
           newReleases?.map((album) => (
             <div key={album.id} className="bg-zinc-800 rounded-md overflow-hidden hover:scale-105 transition-transform duration-200">
               <Link to={`/albums/${album.id}`} >
-                <img src={album.cover[0].url} alt={album.name} className="w-full h-auto"/>
+                <img src={album.cover} alt={album.name} className="w-full h-auto"/>
               </Link>
               <div className="p-2">
                 <h2 className="text-lg text-zinc-100 font-semibold whitespace-nowrap overflow-hidden text-ellipsis"

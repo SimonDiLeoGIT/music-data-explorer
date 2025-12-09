@@ -4,10 +4,11 @@ import { useParams } from "react-router-dom";
 import { PlaylistCardsSkeleton, PlaylistHeaderSkeleton } from "../../components/Skeleton/PlaylistSkeleton";
 import type { PlaylistInterface } from "../../interfaces/PlaylistInterface";
 import PlaylistCards from "../../components/Insights/PlaylistCards";
-import ExplicitTracksDonutChart from "../../components/Insights/ExplicitTracksDonutChart";
 import type { TopTracksInterface } from "../../interfaces/TrackInterface";
 import TopTracks from "../../components/Insights/TopTracks";
 import type { InsightsInterface } from "../../interfaces/InisightsInterfaces";
+import TopArtists from "./components/TopArtists";
+import ExplicitTracks from "../../components/Insights/ExplicitTracks";
 
 const Playlist = () => {
 
@@ -118,13 +119,19 @@ const Playlist = () => {
         id &&
         <TopTracks topTracks={topTracks} />
       }
-      { 
-        playlist && insights &&
-        <ExplicitTracksDonutChart
-          totalTracks={playlist.totalTracks}
-          explicitTracks={insights.explicitTracks}
-        />
-      }
+      <section className="grid grid-cols-2 gap-4 bg-zinc-900 p-4 rounded-b-md">
+        {
+          id &&
+          <TopArtists playlistId={id} />
+        }
+        { 
+          playlist && insights &&
+          <ExplicitTracks
+            totalTracks={playlist.totalTracks}
+            explicitTracks={insights.explicitTracks}
+          />
+        }
+      </section>
     </main>
   )
 }

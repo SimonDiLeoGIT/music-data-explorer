@@ -93,27 +93,33 @@ class InsightsService {
     if (!items || items.length === 0) {
       return 0;
     }
-    return items.filter((item) => item.explicit).length;
+    const validTracks = items.filter((item) => item && item.explicit);
+    return validTracks.filter((item) => item.explicit).length;
   }
 
   playlistTimeInsights(items) {
     if (!items || items.length === 0) {
       return 0;
     }
-    const totalDuration = items.reduce(
-      (total, item) => total + item.track.duration_ms,
+
+    const validTracks = items
+      .map((item) => item.track)
+      .filter((track) => track && track.duration_ms);
+
+    const totalDuration = validTracks.reduce(
+      (total, track) => total + track.duration_ms,
       0
     );
-    const averageDuration = Math.round(totalDuration / items.length);
-    const longestTrack = items.reduce(
-      (max, item) =>
-        item.track.duration_ms > max.duration_ms ? item.track : max,
-      items[0].track
+
+    const averageDuration = Math.round(totalDuration / validTracks.length);
+
+    const longestTrack = validTracks.reduce(
+      (max, track) => (track.duration_ms > max.duration_ms ? track : max),
+      validTracks[0]
     );
-    const shortestTrack = items.reduce(
-      (min, item) =>
-        item.track.duration_ms < min.duration_ms ? item.track : min,
-      items[0].track
+    const shortestTrack = validTracks.reduce(
+      (min, track) => (track.duration_ms < min.duration_ms ? track : min),
+      validTracks[0]
     );
     return {
       totalDuration,
@@ -127,21 +133,24 @@ class InsightsService {
     if (!items || items.length === 0) {
       return 0;
     }
-    const totalPopularity = items.reduce(
-      (total, item) => total + item.track.popularity,
+
+    const validTracks = items
+      .map((item) => item.track)
+      .filter((track) => track && track.popularity);
+
+    const totalPopularity = validTracks.reduce(
+      (total, track) => total + track.popularity,
       0
     );
-    const popularityAverage = Math.round(totalPopularity / items.length);
-    const mostPopularTrack = items.reduce(
-      (max, item) =>
-        item.track.popularity > max.popularity ? item.track : max,
-      items[0].track
+    const popularityAverage = Math.round(totalPopularity / validTracks.length);
+    const mostPopularTrack = validTracks.reduce(
+      (max, track) => (track.popularity > max.popularity ? track : max),
+      validTracks[0]
     );
 
-    const leastPopularTrack = items.reduce(
-      (min, item) =>
-        item.track.popularity < min.popularity ? item.track : min,
-      items[0].track
+    const leastPopularTrack = validTracks.reduce(
+      (min, track) => (track.popularity < min.popularity ? track : min),
+      validTracks[0]
     );
 
     return {
@@ -156,7 +165,10 @@ class InsightsService {
     if (!items || items.length === 0) {
       return 0;
     }
-    return items.filter((item) => item.track.explicit).length;
+    const validTracks = items.filter(
+      (item) => item.track && item.track.explicit
+    );
+    return validTracks.filter((item) => item.track.explicit).length;
   }
 
   playlistTopTracks(tracks) {
@@ -171,7 +183,7 @@ class InsightsService {
 
     const validTracks = tracks
       .map((item) => item.track)
-      .filter((track) => track && track.id);
+      .filter((track) => track && track.duration_ms && track.popularity);
 
     const longestTracks = [...validTracks]
       .sort((a, b) => b.duration_ms - a.duration_ms)
@@ -197,30 +209,33 @@ class InsightsService {
     };
   }
 
-  playlistTopArtists(artists) {
+  playlistArtistsFrequency(artists) {
     if (!artists || artists.length === 0) {
-      return {
-        mostListenedArtists: [],
-        mostPlayedArtists: [],
-      };
+      return [];
     }
 
-    const validArtists = artists.filter(
-      (artist) => artist && artist.listeners && artist.playcount
-    );
+    const validArtists = artists.filter((artist) => artist && artist.id);
 
-    const mostListenedArtists = [...validArtists]
-      .sort((a, b) => b.listeners - a.listeners)
+    const artistCounts = validArtists.reduce((artistsAcc, artist) => {
+      const artistId = artist.id;
+
+      if (!artistsAcc[artistId]) {
+        artistsAcc[artistId] = {
+          ...artist,
+          count: 1,
+        };
+      } else {
+        artistsAcc[artistId].count++;
+      }
+
+      return artistsAcc;
+    }, {});
+
+    const artistsFrequency = Object.values(artistCounts)
+      .sort((a, b) => b.count - a.count)
       .slice(0, 10);
 
-    const mostPlayedArtists = [...validArtists]
-      .sort((a, b) => b.playcount - a.playcount)
-      .slice(0, 10);
-
-    return {
-      mostListenedArtists,
-      mostPlayedArtists,
-    };
+    return { artistsFrequency };
   }
 }
 

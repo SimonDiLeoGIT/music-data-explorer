@@ -9,7 +9,7 @@ interface Props {
   explicitTracks: number
 }
 
-const ExplicitTracksDonutChart: React.FC<Props> = ({totalTracks, explicitTracks}) => {
+const ExplicitTracks: React.FC<Props> = ({totalTracks, explicitTracks}) => {
   const cleanTracks = totalTracks - explicitTracks;
   const explicitPercentage = totalTracks > 0 ? ((explicitTracks / totalTracks) * 100).toFixed(1) : 0;
   const cleanPercentage = totalTracks > 0 ? ((cleanTracks / totalTracks) * 100).toFixed(1) : 0;
@@ -42,7 +42,7 @@ const ExplicitTracksDonutChart: React.FC<Props> = ({totalTracks, explicitTracks}
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom' as const,
+        position: 'right' as const,
         labels: {
           color: '#e4e4e7',
           font: {
@@ -73,34 +73,32 @@ const ExplicitTracksDonutChart: React.FC<Props> = ({totalTracks, explicitTracks}
         }
       },
     },
-    cutout: '70%',
+    cutout: '60%',
   };
 
   return (
-    <section className="bg-zinc-800/50 p-4 rounded-b-md">
-      <h2 className="text-zinc-100 text-2xl font-semibold mb-6">
+    <section className="bg-zinc-800/50 p-4 rounded">
+      <h2 className="text-zinc-100 text-xl font-semibold mb-6">
         Explicit Tracks
       </h2>
-      <div className="flex">
-        <div className="flex flex-col gap-4 w-1/3">
-          {/* Chart */}
-          <div className="min-h-[250px] max-h-[250px]">
-            <Doughnut data={data} options={options} />
+      <div className="flex flex-col gap-4">
+        {/* Chart */}
+        <div className="min-h-[250px] max-h-[250px]">
+          <Doughnut data={data} options={options} />
+        </div>
+        
+        {/* Stats debajo del chart */}
+        <div className="grid grid-cols-2 justify-center gap-4 mt-4">
+          <div className="bg-red-500/10 rounded-lg p-3 border border-red-500/30">
+            <p className="text-red-400 text-xs font-semibold mb-1">Explicit</p>
+            <p className="text-2xl font-bold text-red-400">{explicitTracks}</p>
+            <p className="text-red-400/70 text-xs mt-1">{explicitPercentage}%</p>
           </div>
           
-          {/* Stats debajo del chart */}
-          <div className="grid grid-cols-2 justify-center gap-4 mt-4">
-            <div className="bg-red-500/10 rounded-lg p-3 border border-red-500/30">
-              <p className="text-red-400 text-xs font-semibold mb-1">Explicit</p>
-              <p className="text-2xl font-bold text-red-400">{explicitTracks}</p>
-              <p className="text-red-400/70 text-xs mt-1">{explicitPercentage}%</p>
-            </div>
-            
-            <div className="bg-green-500/10 rounded-lg p-3 border border-green-500/30">
-              <p className="text-green-400 text-xs font-semibold mb-1">Clean</p>
-              <p className="text-2xl font-bold text-green-400">{cleanTracks}</p>
-              <p className="text-green-400/70 text-xs mt-1">{cleanPercentage}%</p>
-            </div>
+          <div className="bg-green-500/10 rounded-lg p-3 border border-green-500/30">
+            <p className="text-green-400 text-xs font-semibold mb-1">Clean</p>
+            <p className="text-2xl font-bold text-green-400">{cleanTracks}</p>
+            <p className="text-green-400/70 text-xs mt-1">{cleanPercentage}%</p>
           </div>
         </div>
       </div>
@@ -108,4 +106,4 @@ const ExplicitTracksDonutChart: React.FC<Props> = ({totalTracks, explicitTracks}
   );
 }
 
-export default ExplicitTracksDonutChart;
+export default ExplicitTracks;

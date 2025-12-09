@@ -143,7 +143,7 @@ class SpotifyService {
   }
 
   async getNewReleases(limit = 12, offset = 0, country = "AR") {
-    if (limit > 50) limit = 50; // Límite de Spotify
+    if (limit > 50) limit = 50; // Spotify limit
     return this.getRequest(`/browse/new-releases`, {
       limit,
       offset,
@@ -211,6 +211,31 @@ class SpotifyService {
     }
 
     return { items: allTracks, total: allTracks.length };
+  }
+
+  async getArtistData(artistId) {
+    if (!artistId) {
+      throw new Error("Artist ID is required");
+    }
+    return this.getRequest(`/artists/${artistId}`);
+  }
+
+  async getArtistTopTracks(artistId) {
+    if (!artistId) {
+      throw new Error("Artist ID is required");
+    }
+    return this.getRequest(`/artists/${artistId}/top-tracks`, {
+      country: "AR",
+    });
+  }
+
+  async getArtistAlbums(artistId) {
+    if (!artistId) {
+      throw new Error("Artist ID is required");
+    }
+    return this.getRequest(`/artists/${artistId}/albums`, {
+      country: "AR",
+    });
   }
 }
 

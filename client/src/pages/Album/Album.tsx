@@ -6,10 +6,10 @@ import ArtistData from "./components/ArtistData";
 import { ArtistDataSkeleton, PlaylistCardsSkeleton, PlaylistHeaderSkeleton } from "../../components/Skeleton/PlaylistSkeleton";
 import { formatNumber, formatNumberWithCommas } from "../../utils/formatNumbers";
 import PlaylistCards from "../../components/Insights/PlaylistCards";
-import ExplicitTracksDonutChart from "../../components/Insights/ExplicitTracksDonutChart";
 import TopTracks from "../../components/Insights/TopTracks";
 import type { TopTracksInterface } from "../../interfaces/TrackInterface";
 import type { InsightsInterface } from "../../interfaces/InisightsInterfaces";
+import ExplicitTracks from "../../components/Insights/ExplicitTracks";
 
 const Album = () => {
 
@@ -131,7 +131,7 @@ const Album = () => {
       }
       { 
         !loading && album && insights &&
-        <ExplicitTracksDonutChart
+        <ExplicitTracks
           totalTracks={album.totalTracks}
           explicitTracks={insights.explicitTracks}
         />

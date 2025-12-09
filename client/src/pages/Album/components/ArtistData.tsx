@@ -1,8 +1,9 @@
-import type { ArtistInterface } from "../../../interfaces/ArtistInterface"
+import { HtmlRenderer } from "../../../components/HtmlRenderer"
+import type { ArtistCompactInterface } from "../../../interfaces/ArtistInterface"
 import { formatNumber, formatNumberWithCommas } from "../../../utils/formatNumbers"
 
 interface Props {
-  artist: ArtistInterface
+  artist: ArtistCompactInterface
 }
 
 const ArtistData: React.FC<Props> = ({artist}) => {
@@ -14,7 +15,7 @@ const ArtistData: React.FC<Props> = ({artist}) => {
           <img src={artist.image} alt={artist.name + 's image '} className="w-8 h-8 rounded-full float-left mr-2"/>
           <span className="font-semibold">{artist.name}</span>
         </div>
-        <BiographyText text={artist.bio} />
+        <HtmlRenderer text={artist.bio} />
       </div>
       <div className="grid grid-cols-2 gap-2 m-auto p-2">
         <article className="bg-zinc-900/50 p-4 rounded-md flex flex-col shadow-md hover:cursor-default">
@@ -45,31 +46,5 @@ const ArtistData: React.FC<Props> = ({artist}) => {
     </section>
   )
 }
-
-const BiographyText: React.FC<{ text: string }> = ({ text }) => {
-  
-  const linkMatch = text.match(/<a href="([^"]+)">([^<]+)<\/a>/);
-  
-  if (!linkMatch) {
-    return <p className="text-zinc-400 text-sm">{text}</p>;
-  }
-  
-  const [fullMatch, url, linkText] = linkMatch;
-  const beforeLink = text.substring(0, text.indexOf(fullMatch));
-  
-  return (
-    <p className="text-zinc-400 text-sm">
-      {beforeLink}
-      <a 
-        href={url} 
-        target="_blank" 
-        rel="noreferrer"
-        className="text-purple-400 hover:underline"
-      >
-        {linkText}
-      </a>
-    </p>
-  );
-};
 
 export default ArtistData

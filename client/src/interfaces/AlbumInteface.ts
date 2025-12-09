@@ -1,9 +1,9 @@
-import type { ArtistInterface } from "./ArtistInterface"
+import type { ArtistCompactInterface } from "./ArtistInterface"
 
 export interface AlbumInterface {
   id: string
   name: string
-  artist: ArtistInterface
+  artist: ArtistCompactInterface
   releaseDate: string
   cover: string
   totalTracks: number
@@ -12,4 +12,12 @@ export interface AlbumInterface {
     listeners: number
     playcount: number
   }
+}
+
+export interface NewReleaseInterface {
+  id: string
+  name: string
+  artist: string
+  releaseDate: string
+  cover: string
 }

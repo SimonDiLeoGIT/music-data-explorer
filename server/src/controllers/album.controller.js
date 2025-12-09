@@ -218,7 +218,7 @@ export async function newReleases(req, res) {
       name: album.name,
       artist: album.artists.map((artist) => artist.name).join(", "),
       releaseDate: album.release_date.split("-")[0],
-      cover: album.images,
+      cover: album.images[0]?.url || null,
       totalTracks: album.total_tracks,
     }));
 

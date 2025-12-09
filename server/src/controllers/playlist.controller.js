@@ -122,54 +122,21 @@ export async function getPlaylistTopArtists(req, res) {
 
     const artists = [];
     for (const item of playlistTracks.items) {
+      if (!item.track || !item.track.artists) continue;
       for (const artist of item.track.artists) {
         artists.push(artist);
       }
     }
 
-    // Remove duplicated artists
-    const uniqueArtists = Array.from(
-      new Map(artists.map((a) => [a.id, a])).values()
-    );
+    const reducedArtistsData = artists.map((artist) => ({
+      id: artist.id,
+      name: artist.name,
+    }));
 
-    // Fetch stats for each artist
-    const artistsWithStats = await processBatch(
-      uniqueArtists,
-      50, // batch size
-      500, // timeout
-      async (artist) => {
-        try {
-          const [artistLfmInfo, artistSpotifyInfo] = await Promise.all([
-            LastfmService.getArtistInfo(artist.name),
-            SpotifyService.getArtistData(artist.id),
-          ]);
+    const topArtists =
+      InsightsService.playlistArtistsFrequency(reducedArtistsData);
 
-          if (!artistLfmInfo.artist) {
-            return null;
-          }
-
-          return {
-            ...artist,
-            stats: artistLfmInfo.artist.stats,
-            image: artistSpotifyInfo.images?.[0]?.url || null,
-          };
-        } catch (error) {
-          console.error(`Error fetching artist ${artist.name}:`, error);
-          return null;
-        }
-      }
-    );
-
-    const reducedArtistsData = artistsWithStats
-      .filter((artist) => artist && artist.stats) // Artists with stats only
-      .map((artist) => ({
-        name: artist.name,
-        listeners: parseInt(artist.stats.listeners) || 0,
-        playcount: parseInt(artist.stats.playcount) || 0,
-        image: artist.image,
-      }));
-
-    const topArtists = InsightsService.playlistTopArtists(reducedArtistsData);
+    topArtists.totalArtists = playlistTracks.items.length;
 
     res.json(topArtists);
   } catch (err) {

@@ -102,6 +102,10 @@ class MusicService {
   async getPlaylistTopArtists(playlistId: string) {
     return getRequest(`/playlists/${playlistId}/top-artists`);
   }
+
+  async getArtistData(artistId: string) {
+    return getRequest(`/artists/${artistId}`);
+  }
 }
 
 export const musicService = new MusicService();

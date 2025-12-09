@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import BarChart from "./BarChart";
+import BarChart from "../charts/BarChart";
 import type { TopTracksInterface, TrackInterface } from "../../interfaces/TrackInterface";
 import { SkeletonChart } from "../Skeleton/PlaylistSkeleton";
 
@@ -18,7 +18,7 @@ const TopTracks: React.FC<Props> = ({ topTracks}) => {
   }, [topTracks])
 
   return (
-    <section className="bg-zinc-800/50 p-4 rounded-b-md">
+    <section className="bg-zinc-800/50 p-4">
       <h2 className="text-zinc-100 text-2xl font-semibold mb-6">
         Top Tracks Analysis
       </h2>
@@ -33,28 +33,6 @@ const TopTracks: React.FC<Props> = ({ topTracks}) => {
         ) : (
           topTracks && (
             <>
-              {/* Longest Tracks */}
-              <div className="bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 hover:border-purple-500/30 transition-colors">
-                <h3 className="text-lg font-semibold text-purple-400 mb-3 flex items-center gap-2">
-                  Longest Tracks
-                </h3>
-                <div className="flex gap-4 items-center">
-                  <TopChart top={topTracks.longestTracks}  model="time" label="Duration (ms)" titles={["Duration (ms)", "Tracks"]} horizontal />
-                  <TopList top={topTracks.longestTracks} model="time"/>
-                </div>
-              </div>
-              
-              {/* Shortest Tracks */}
-              <div className="bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 hover:border-blue-500/30 transition-colors">
-                <h3 className="text-lg font-semibold text-blue-400 mb-3 flex items-center gap-2">
-                  Shortest Tracks
-                </h3>
-                <div className="flex gap-4 items-center">
-                  <TopChart top={topTracks.shortestTracks} model="time" label="Duration (ms)" titles={["Duration (ms)", "Tracks"]} horizontal />
-                  <TopList top={topTracks.shortestTracks} model="time"/>
-                </div>
-              </div>
-              
               {/* Most Popular Tracks */}
               <div className="bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 hover:border-green-500/30 transition-colors">
                 <h3 className="text-lg font-semibold text-green-400 mb-3 flex items-center gap-2">
@@ -74,6 +52,28 @@ const TopTracks: React.FC<Props> = ({ topTracks}) => {
                 <div className="flex gap-4 items-center">
                   <TopChart top={topTracks.leastPopularTracks} model="populatiry" label="Popularity" titles={["Popularity", "Tracks"]} horizontal={false} />
                   <TopList top={topTracks.leastPopularTracks} model="populatiry"/>
+                </div>
+              </div>
+
+              {/* Longest Tracks */}
+              <div className="bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 hover:border-purple-500/30 transition-colors">
+                <h3 className="text-lg font-semibold text-purple-400 mb-3 flex items-center gap-2">
+                  Longest Tracks
+                </h3>
+                <div className="flex gap-4 items-center">
+                  <TopChart top={topTracks.longestTracks}  model="time" label="Duration (ms)" titles={["Duration (ms)", "Tracks"]} horizontal />
+                  <TopList top={topTracks.longestTracks} model="time"/>
+                </div>
+              </div>
+              
+              {/* Shortest Tracks */}
+              <div className="bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 hover:border-blue-500/30 transition-colors">
+                <h3 className="text-lg font-semibold text-blue-400 mb-3 flex items-center gap-2">
+                  Shortest Tracks
+                </h3>
+                <div className="flex gap-4 items-center">
+                  <TopChart top={topTracks.shortestTracks} model="time" label="Duration (ms)" titles={["Duration (ms)", "Tracks"]} horizontal />
+                  <TopList top={topTracks.shortestTracks} model="time"/>
                 </div>
               </div>
             </>
