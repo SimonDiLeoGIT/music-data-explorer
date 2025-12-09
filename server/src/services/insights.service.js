@@ -196,6 +196,32 @@ class InsightsService {
       leastPopularTracks,
     };
   }
+
+  playlistTopArtists(artists) {
+    if (!artists || artists.length === 0) {
+      return {
+        mostListenedArtists: [],
+        mostPlayedArtists: [],
+      };
+    }
+
+    const validArtists = artists.filter(
+      (artist) => artist && artist.listeners && artist.playcount
+    );
+
+    const mostListenedArtists = [...validArtists]
+      .sort((a, b) => b.listeners - a.listeners)
+      .slice(0, 10);
+
+    const mostPlayedArtists = [...validArtists]
+      .sort((a, b) => b.playcount - a.playcount)
+      .slice(0, 10);
+
+    return {
+      mostListenedArtists,
+      mostPlayedArtists,
+    };
+  }
 }
 
 export default new InsightsService();

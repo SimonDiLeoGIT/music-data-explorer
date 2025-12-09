@@ -1,6 +1,8 @@
 import SpotifyService from "../services/spotify.service.js";
 import InsightsService from "../services/insights.service.js";
 import { durationMsToTimeString } from "../utils/TimeFormater.js";
+import LastfmService from "../services/lastfm.service.js";
+import { processBatch } from "../utils/ProcessBatch.js";
 
 function reduceTrackInfo(track) {
   return {
@@ -106,6 +108,70 @@ export async function getPlaylistTopTracks(req, res) {
     };
 
     res.json(response);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export async function getPlaylistTopArtists(req, res) {
+  const playlistId = req.params.id;
+  try {
+    const playlistTracks = await SpotifyService.getAllPlaylistTracks(
+      playlistId
+    );
+
+    const artists = [];
+    for (const item of playlistTracks.items) {
+      for (const artist of item.track.artists) {
+        artists.push(artist);
+      }
+    }
+
+    // Remove duplicated artists
+    const uniqueArtists = Array.from(
+      new Map(artists.map((a) => [a.id, a])).values()
+    );
+
+    // Fetch stats for each artist
+    const artistsWithStats = await processBatch(
+      uniqueArtists,
+      50, // batch size
+      500, // timeout
+      async (artist) => {
+        try {
+          const [artistLfmInfo, artistSpotifyInfo] = await Promise.all([
+            LastfmService.getArtistInfo(artist.name),
+            SpotifyService.getArtistData(artist.id),
+          ]);
+
+          if (!artistLfmInfo.artist) {
+            return null;
+          }
+
+          return {
+            ...artist,
+            stats: artistLfmInfo.artist.stats,
+            image: artistSpotifyInfo.images?.[0]?.url || null,
+          };
+        } catch (error) {
+          console.error(`Error fetching artist ${artist.name}:`, error);
+          return null;
+        }
+      }
+    );
+
+    const reducedArtistsData = artistsWithStats
+      .filter((artist) => artist && artist.stats) // Artists with stats only
+      .map((artist) => ({
+        name: artist.name,
+        listeners: parseInt(artist.stats.listeners) || 0,
+        playcount: parseInt(artist.stats.playcount) || 0,
+        image: artist.image,
+      }));
+
+    const topArtists = InsightsService.playlistTopArtists(reducedArtistsData);
+
+    res.json(topArtists);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

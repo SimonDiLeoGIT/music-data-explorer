@@ -1,7 +1,4 @@
 import type { ArtistInterface } from "./ArtistInterface"
-import type { InsightsInterface } from "./InisightsInterfaces"
-
-export interface AlbumInsightsInterface extends InsightsInterface {}
 
 export interface AlbumInterface {
   id: string

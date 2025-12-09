@@ -18,3 +18,16 @@ export interface PlaylistTrackInterface extends TrackInterface {
     name: string
   }
 }
+
+export interface PlaylistTopArtistsInterface {
+  mostListenedArtists: TopArtistsInterface[]
+  mostPlayedArtists: TopArtistsInterface[]
+}
+
+export interface TopArtistsInterface {
+  id: string
+  name: string
+  image: string
+  listeners: number
+  playcount: number
+}

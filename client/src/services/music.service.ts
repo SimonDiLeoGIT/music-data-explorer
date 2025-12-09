@@ -98,6 +98,10 @@ class MusicService {
   async getPlaylistTopTracks(playlistId: string) {
     return getRequest(`/playlists/${playlistId}/top-tracks`);
   }
+
+  async getPlaylistTopArtists(playlistId: string) {
+    return getRequest(`/playlists/${playlistId}/top-artists`);
+  }
 }
 
 export const musicService = new MusicService();
