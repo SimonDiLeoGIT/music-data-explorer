@@ -14,16 +14,3 @@ export async function getRequest(url : string, params = {}) {
   }
   
 }
-
-export async function postRequest(url: string, params = {}) {
-  try {
-    const response = await axios.post(`${SERVER_BASE_URL}${url}`, params);
-    if (response.status !== 200) {
-      throw new Error('Network response was not ok');
-    }
-    return response.data;
-  } catch (error) {
-    console.error('Error posting data:', error);
-    throw error;
-  }
-}

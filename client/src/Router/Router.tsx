@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import Home from '../pages/Home/Home';
 import Album from '../pages/Album/Album';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/global/Navbar';
 import Playlist from '../pages/Playlist/Playlist';
 
 const Router = () => {

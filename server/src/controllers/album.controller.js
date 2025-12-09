@@ -17,29 +17,10 @@ function reduceTrackInfo(track) {
   };
 }
 
-export async function albumInsights(req, res) {
+export async function albumData(req, res) {
   const albumId = req.params.id;
-
   try {
-    // Album Data
     const albumData = await SpotifyService.getAlbumData(albumId);
-
-    const albumTimeInsights = InsightsService.albumTimeInsights(
-      albumData.tracks.items
-    );
-
-    const explicitTracks = InsightsService.albumExplicitTracks(
-      albumData.tracks.items
-    );
-
-    const trackIds = albumData.tracks.items.map((track) => track.id);
-    const tracksDetails = await SpotifyService.getSeveralTracksDetails(
-      trackIds
-    );
-
-    const albumPopulatiryInsights = InsightsService.albumPopulatiryInsights(
-      tracksDetails.tracks
-    );
 
     // Album Lasft fm data
     const albumStats = await LastfmService.getAlbumInfo(
@@ -70,13 +51,47 @@ export async function albumInsights(req, res) {
       image: artistData.images[0].url,
     };
 
-    const albumInsights = {
-      id: albumData.id,
+    const reducedAlbumData = {
+      id: albumId,
       name: albumData.name,
       artist: reducedArtistInfo,
       releaseDate: albumData.release_date.split("-")[0],
       cover: albumData.images[0].url,
       totalTracks: albumData.tracks.total,
+      stats: reducedAlbumStats,
+    };
+
+    res.json(reducedAlbumData);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export async function albumInsights(req, res) {
+  const albumId = req.params.id;
+
+  try {
+    // Album Data
+    const albumData = await SpotifyService.getAlbumData(albumId);
+
+    const albumTimeInsights = InsightsService.albumTimeInsights(
+      albumData.tracks.items
+    );
+
+    const explicitTracks = InsightsService.albumExplicitTracks(
+      albumData.tracks.items
+    );
+
+    const trackIds = albumData.tracks.items.map((track) => track.id);
+    const tracksDetails = await SpotifyService.getSeveralTracksDetails(
+      trackIds
+    );
+
+    const albumPopulatiryInsights = InsightsService.albumPopulatiryInsights(
+      tracksDetails.tracks
+    );
+
+    const albumInsights = {
       time: {
         totalDuration: durationMsToTimeString(albumTimeInsights.totalDuration),
         averageDuration: durationMsToTimeString(
@@ -95,10 +110,43 @@ export async function albumInsights(req, res) {
         ),
       },
       explicitTracks,
-      stats: reducedAlbumStats,
     };
 
     res.json(albumInsights);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export async function getAlbumTopTracks(req, res) {
+  const albumId = req.params.id;
+  try {
+    const albumTracks = await SpotifyService.getAlbumTracks(albumId);
+
+    const trackIds = albumTracks.items.map((track) => track.id);
+
+    const severalTracks = await SpotifyService.getSeveralTracksDetails(
+      trackIds
+    );
+
+    const topTracks = InsightsService.albumTopTracks(severalTracks.tracks);
+
+    const response = {
+      longestTracks: topTracks.longestTracks.map((track) =>
+        reduceTrackInfo(track)
+      ),
+      shortestTracks: topTracks.shortestTracks.map((track) =>
+        reduceTrackInfo(track)
+      ),
+      mostPopularTracks: topTracks.mostPopularTracks.map((track) =>
+        reduceTrackInfo(track)
+      ),
+      leastPopularTracks: topTracks.leastPopularTracks.map((track) =>
+        reduceTrackInfo(track)
+      ),
+    };
+
+    res.json(response);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

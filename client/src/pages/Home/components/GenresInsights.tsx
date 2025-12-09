@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { musicService } from "../../../services/music.service";
 import type { GenreInterface, TopGenreTagInterface } from "../../../interfaces/GenderInterface";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import BarChart from "../../../components/BarChart";
+import BarChart from "../../../components/Insights/BarChart";
 import GenresInsightsSkeleton, { TopCardSkeleton, TopChartSkeleton, TopFiveListSkeleton } from "../../../components/Skeleton/GenresInsightsSkeleton";
 
 const GenresInsights = () => {

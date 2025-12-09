@@ -1,32 +1,21 @@
 import { useEffect, useState } from "react";
-import { musicService } from "../../../services/music.service";
-import BarChart from "../../../components/BarChart";
-import type { TopTracksInterface, TrackInterface } from "../../../interfaces/TrackInterface";
-import { SkeletonChart } from "../../../components/Skeleton/PlaylistSkeleton";
+import BarChart from "./BarChart";
+import type { TopTracksInterface, TrackInterface } from "../../interfaces/TrackInterface";
+import { SkeletonChart } from "../Skeleton/PlaylistSkeleton";
 
 interface Props {
-  playlistId: string
+  topTracks: TopTracksInterface | null
 }
 
-const TracksCharts: React.FC<Props> = ({ playlistId }) => {
-  
-  const [topTracks, setTopTracks] = useState<TopTracksInterface|null>(null);
+const TopTracks: React.FC<Props> = ({ topTracks}) => {
+
   const [loading, setLoading] = useState(true);
-  
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const data = await musicService.getPlaylistTopTracks(playlistId);
-      setTopTracks(data);
-    } finally {
+
+  useEffect(() => {
+    if (topTracks) {
       setLoading(false);
     }
-  }
-  
-  useEffect(() => {
-    fetchData();
-  }, [playlistId])
-
+  }, [topTracks])
 
   return (
     <section className="bg-zinc-800/50 p-4 rounded-b-md">
@@ -158,4 +147,4 @@ const TopList: React.FC<{top: TrackInterface[], model: string}> = ({top, model})
   )
 } 
 
-export default TracksCharts;
+export default TopTracks;

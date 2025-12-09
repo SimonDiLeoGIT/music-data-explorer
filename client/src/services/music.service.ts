@@ -1,6 +1,10 @@
-import {getRequest, postRequest} from './api.service';
+import {getRequest} from './api.service';
 
 class MusicService {
+
+  async getAlbumData(albumId: string) {
+    return getRequest(`/albums/${albumId}`);
+  }
 
   async getAlbumInsights(id: string) {
     try {
@@ -9,9 +13,14 @@ class MusicService {
     } catch (error) {
       console.error('Error fetching album insights:', error);
     }
+  
+  }
+
+  async getAlbumTopTracks(albumId: string) {
+    return getRequest(`/albums/${albumId}/top-tracks`);
   }
   
-  async getTrackDetails(albumId: string, sortBy?: string, sortOrder?: string) {
+  async getAlbumTracks(albumId: string, sortBy?: string, sortOrder?: string) {
     try {
       const responseData = await getRequest(`/albums/${albumId}/tracks`, { sortBy, sortOrder });
       return responseData;
@@ -23,15 +32,6 @@ class MusicService {
   async getNewReleases(limit: number = 12, offset: number = 0) {
     try {
       const responseData = await getRequest(`/albums/browse/new-releases`, { limit, offset });
-      return responseData;
-    } catch (error) {
-      console.error('Error fetching track details:', error);
-    }
-  }
-
-  async getAlbumsPopularityInsights(albums: string) {
-    try {
-      const responseData = await postRequest(`/albums/popularity-insights`, { albums });
       return responseData;
     } catch (error) {
       console.error('Error fetching track details:', error);

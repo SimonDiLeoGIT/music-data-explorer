@@ -2,16 +2,20 @@ import { useEffect, useState } from "react";
 import { musicService } from "../../services/music.service";
 import { useParams } from "react-router-dom";
 import { PlaylistCardsSkeleton, PlaylistHeaderSkeleton } from "../../components/Skeleton/PlaylistSkeleton";
-import type { PlaylistInsightsInterface, PlaylistInterface } from "../../interfaces/PlaylistInterface";
-import PlaylistCards from "../../components/PlaylistCards";
-import TracksCharts from "./components/TracksCharts";
+import type { PlaylistInterface } from "../../interfaces/PlaylistInterface";
+import PlaylistCards from "../../components/Insights/PlaylistCards";
+import ExplicitTracksDonutChart from "../../components/Insights/ExplicitTracksDonutChart";
+import type { TopTracksInterface } from "../../interfaces/TrackInterface";
+import TopTracks from "../../components/Insights/TopTracks";
+import type { InsightsInterface } from "../../interfaces/InisightsInterfaces";
 
 const Playlist = () => {
 
   const { id } = useParams();
 
   const [playlist, setPlaylist] = useState<PlaylistInterface|null>(null);
-  const [insights, setInsights] = useState<PlaylistInsightsInterface|null>(null);
+  const [insights, setInsights] = useState<InsightsInterface|null>(null);
+  const [topTracks, setTopTracks] = useState<TopTracksInterface|null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
@@ -36,9 +40,21 @@ const Playlist = () => {
     }
   }
 
+  const fetchTopTracks = async () => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      const data = await musicService.getPlaylistTopTracks(id);
+      setTopTracks(data);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchData();
     fetchInsights();
+    fetchTopTracks();
   }, [id])
 
   return( 
@@ -100,7 +116,14 @@ const Playlist = () => {
       }
       {
         id &&
-        <TracksCharts playlistId={id} />
+        <TopTracks topTracks={topTracks} />
+      }
+      { 
+        playlist && insights &&
+        <ExplicitTracksDonutChart
+          totalTracks={playlist.totalTracks}
+          explicitTracks={insights.explicitTracks}
+        />
       }
     </main>
   )

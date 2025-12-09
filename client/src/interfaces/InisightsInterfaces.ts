@@ -12,4 +12,5 @@ export interface InsightsInterface {
     mostPopularTrack: TrackInterface
     leastPopularTrack: TrackInterface
   }
+  explicitTracks: number
 }

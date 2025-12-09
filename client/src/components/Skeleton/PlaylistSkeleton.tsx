@@ -158,18 +158,44 @@ export const TracksSkeleton = () => {
 
 export const SkeletonChart: React.FC = () => {
   return (
-    <div className="bg-zinc-700/30 rounded-lg p-4 animate-pulse h-full">
-      <div className="h-6 bg-zinc-600/50 rounded w-1/3 mb-4"></div>
-      <div className="space-y-3 h-[calc(100%-2rem)]">
-        {[...Array(10)].map((_, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <div className="h-4 bg-zinc-600/50 rounded flex-1"></div>
-            <div 
-              className="h-4 bg-zinc-600/50 rounded" 
-              style={{ width: `${Math.random() * 40 + 30}%` }}
-            ></div>
+    <div className="bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 animate-pulse">
+      {/* Header */}
+      <div className="h-6 bg-zinc-700/50 rounded w-1/4 mb-4"></div>
+      <div className="flex gap-4 items-center">
+        {/* Chart Skeleton */}
+        <div className="w-2/3 h-[400px] bg-zinc-700/30 rounded-lg p-4">
+          <div className="h-full flex flex-col justify-end gap-2">
+            {[...Array(10)].map((_, i) => (
+              <div 
+                key={i} 
+                className="bg-zinc-600/50 rounded"
+                style={{ 
+                  height: `${Math.random() * 60 + 20}%`,
+                  width: '100%'
+                }}
+              ></div>
+            ))}
           </div>
-        ))}
+        </div>
+        
+        {/* List Skeleton */}
+        <div className="flex-1 rounded-lg p-4">
+          <div className="space-y-2">
+            {[...Array(10)].map((_, i) => (
+              <div 
+                key={i} 
+                className="flex items-center gap-2 p-2 bg-zinc-700/50 rounded h-12"
+              >
+                <div className="w-4 h-4 bg-zinc-600/50 rounded"></div>
+                <div className="flex-1 h-4 bg-zinc-600/50 rounded"></div>
+                <div 
+                  className="h-4 bg-zinc-600/50 rounded" 
+                  style={{ width: `${Math.random() * 30 + 40}px` }}
+                ></div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

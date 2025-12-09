@@ -1,4 +1,3 @@
-import type { InsightsInterface } from "./InisightsInterfaces";
 import type { TrackInterface } from "./TrackInterface";
 
 export interface PlaylistInterface {
@@ -7,8 +6,6 @@ export interface PlaylistInterface {
   cover: string
   totalTracks: number
 }
-
-export interface PlaylistInsightsInterface extends InsightsInterface {}
 
 export interface PlaylistTrackInterface extends TrackInterface {
   album: {

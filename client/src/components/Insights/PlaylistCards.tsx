@@ -1,4 +1,4 @@
-import type { InsightsInterface } from "../interfaces/InisightsInterfaces"
+import type { InsightsInterface } from "../../interfaces/InisightsInterfaces"
 
 interface Props {
   insights: InsightsInterface

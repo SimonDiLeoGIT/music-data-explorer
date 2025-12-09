@@ -1,21 +1,37 @@
 import { useEffect, useState } from "react";
 import { musicService } from "../../services/music.service";
-import type { AlbumInsightsInterface } from "../../interfaces/AlbumInteface";
-import Tracks from "./components/Tracks";
+import type { AlbumInterface } from "../../interfaces/AlbumInteface";
 import { useParams } from "react-router-dom";
 import ArtistData from "./components/ArtistData";
-import { ArtistDataSkeleton, PlaylistCardsSkeleton, PlaylistHeaderSkeleton, TracksSkeleton } from "../../components/Skeleton/PlaylistSkeleton";
+import { ArtistDataSkeleton, PlaylistCardsSkeleton, PlaylistHeaderSkeleton } from "../../components/Skeleton/PlaylistSkeleton";
 import { formatNumber, formatNumberWithCommas } from "../../utils/formatNumbers";
-import PlaylistCards from "../../components/PlaylistCards";
+import PlaylistCards from "../../components/Insights/PlaylistCards";
+import ExplicitTracksDonutChart from "../../components/Insights/ExplicitTracksDonutChart";
+import TopTracks from "../../components/Insights/TopTracks";
+import type { TopTracksInterface } from "../../interfaces/TrackInterface";
+import type { InsightsInterface } from "../../interfaces/InisightsInterfaces";
 
 const Album = () => {
 
   const { id } = useParams();
 
-  const [insights, setInsights] = useState<AlbumInsightsInterface|null>(null);
+  const [album, setAlbum] = useState<AlbumInterface|null>(null);
+  const [insights, setInsights] = useState<InsightsInterface|null>(null);
+  const [topTracks, setTopTracks] = useState<TopTracksInterface|null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      const data = await musicService.getAlbumData(id);
+      setAlbum(data);
+    } finally {
+      setLoading(false);
+    }
+  }
+  
+  const fetchInsights = async () => {
     if (!id) return;
     setLoading(true);
     try {
@@ -26,77 +42,99 @@ const Album = () => {
     }
   }
 
+  const fetchTopTracks = async () => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      const data = await musicService.getAlbumTopTracks(id);
+      setTopTracks(data);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchData();
+    fetchInsights();
+    fetchTopTracks();
   }, [id])
-
-  if (loading) {
-    return (
-      <main className='p-8 py-4 w-11/12 max-w-[1600px] mx-auto'>
-        <PlaylistHeaderSkeleton />
-        <ArtistDataSkeleton />
-        <PlaylistCardsSkeleton />
-        <TracksSkeleton />
-      </main>
-    );
-  }
 
   return( 
     <main className='p-8 py-4 w-11/12 max-w-[1600px] mx-auto'>
-      <header className="bg-zinc-800 p-4 rounded-t-md relative overflow-hidden">
-        {
-          insights?.cover &&
-          <div
-            className="absolute inset-0 bg-cover bg-center blur-xl brightness-40 scale-110"
-            style={{ backgroundImage: `url(${insights?.cover})` }}
-          />
-        }
-        <section className="flex relative z-10">
-          <img src={insights?.cover} alt="Album Cover" className="w-64 h-64 rounded"/>
-          <div className="m-auto mb-0 ml-4 text-zinc-100 font-semibold flex flex-col gap-2">
-            <p className="text-sm">Album</p>
-            <p className="text-5xl">{insights?.name}</p>
-            <p className="text-sm">{insights?.artist.name} <span className="text-zinc-400">&bull; {insights?.releaseDate} &bull; {insights?.totalTracks} songs, {insights?.time.totalDuration}</span></p>
-          </div>
-        </section>
-        <section className="absolute bottom-0 right-0 p-4 grid grid-cols-2 gap-4 z-50">
-          <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 shadow-md hover:cursor-default">
-            <h2 className="text-lg font-semibold text-center">Listeners</h2>
-            {
-              insights?.stats.listeners &&
-              <p 
-                className="font-semibold text-2xl text-purple-400 m-auto text-center"
-                title={formatNumberWithCommas(insights?.stats.listeners)}
-              >
-                {formatNumber(insights?.stats.listeners)}
-              </p>
-            }
-          </article>
-          <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 place-content-center shadow-md hover:cursor-default">
-            <h2 className="text-lg font-semibold text-center">Plays</h2>
-            {
-              insights?.stats.playcount &&
-              <p 
-                className="font-semibold text-2xl text-purple-400 m-auto text-center"
-                title={formatNumberWithCommas(insights?.stats.playcount)}
-              >
-                {formatNumber(insights?.stats.playcount)}
-              </p>
-            }
-          </article>
-       </section>
-      </header>
       {
-        insights &&
-        <ArtistData artist={insights?.artist} />
+        loading || !album ?
+        <PlaylistHeaderSkeleton />
+        :
+        <header className="bg-zinc-800 p-4 rounded-t-md relative overflow-hidden">
+          {
+            album?.cover &&
+            <div
+              className="absolute inset-0 bg-cover bg-center blur-xl brightness-40 scale-110"
+              style={{ backgroundImage: `url(${album?.cover})` }}
+            />
+          }
+          <section className="flex relative z-10">
+            <img src={album?.cover} alt="Album Cover" className="w-64 h-64 rounded"/>
+            <div className="m-auto mb-0 ml-4 text-zinc-100 font-semibold flex flex-col gap-2">
+              <p className="text-sm">Album</p>
+              <p className="text-5xl">{album?.name}</p>
+              <p className="text-sm">{album?.artist.name} 
+                <span className="text-zinc-400">
+                  &bull; {album?.releaseDate} &bull; {album?.totalTracks} songs, {insights?.time?.totalDuration}
+                </span>
+              </p>
+            </div>
+          </section>
+          <section className="absolute bottom-0 right-0 p-4 grid grid-cols-2 gap-4 z-50">
+            <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 shadow-md hover:cursor-default">
+              <h2 className="text-lg font-semibold text-center">Listeners</h2>
+              {
+                album?.stats.listeners &&
+                <p 
+                  className="font-semibold text-2xl text-purple-400 m-auto text-center"
+                  title={formatNumberWithCommas(album?.stats.listeners)}
+                >
+                  {formatNumber(album?.stats.listeners)}
+                </p>
+              }
+            </article>
+            <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 place-content-center shadow-md hover:cursor-default">
+              <h2 className="text-lg font-semibold text-center">Plays</h2>
+              {
+                album?.stats.playcount &&
+                <p 
+                  className="font-semibold text-2xl text-purple-400 m-auto text-center"
+                  title={formatNumberWithCommas(album?.stats.playcount)}
+                >
+                  {formatNumber(album?.stats.playcount)}
+                </p>
+              }
+            </article>
+        </section>
+        </header>
       }
       {
-        insights &&
+        loading || !album ?
+        <ArtistDataSkeleton />
+        :
+        <ArtistData artist={album.artist} />
+      }
+      {
+        loading || !insights ?
+        <PlaylistCardsSkeleton />
+        : 
         <PlaylistCards insights={insights} />
       }
       {
-        id && 
-        <Tracks albumId={id} />
+        id &&
+        <TopTracks topTracks={topTracks} />
+      }
+      { 
+        !loading && album && insights &&
+        <ExplicitTracksDonutChart
+          totalTracks={album.totalTracks}
+          explicitTracks={insights.explicitTracks}
+        />
       }
     </main>
   )

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { musicService } from "../services/music.service";
+import { musicService } from "../../services/music.service";
 import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
-import type { SearchResultInterface } from "../interfaces/Search";
+import type { SearchResultInterface } from "../../interfaces/Search";
 
 const Search = () => {
 
