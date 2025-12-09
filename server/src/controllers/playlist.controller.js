@@ -16,27 +16,43 @@ function reduceTrackInfo(track) {
   };
 }
 
-export async function getPlaylistInsights(req, res) {
+export async function getPlaylistData(req, res) {
   const playlistId = req.params.id;
   try {
     const playlistData = await SpotifyService.getPlaylistData(playlistId);
 
-    const playlistTimeInsights = InsightsService.playlistTimeInsights(
-      playlistData.tracks.items
-    );
-
-    const playlistPopulatiryInsights =
-      InsightsService.playlistPopulatiryInsights(playlistData.tracks.items);
-
-    const explicitTracks = InsightsService.playlistExplicitTracks(
-      playlistData.tracks.items
-    );
-
-    const playlistInsights = {
+    const reducedPlaylistData = {
       id: playlistId,
       name: playlistData.name,
       cover: playlistData.images[0].url,
       totalTracks: playlistData.tracks.total,
+    };
+
+    res.json(reducedPlaylistData);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export async function getPlaylistInsights(req, res) {
+  const playlistId = req.params.id;
+  try {
+    const playlistTracks = await SpotifyService.getAllPlaylistTracks(
+      playlistId
+    );
+
+    const playlistTimeInsights = InsightsService.playlistTimeInsights(
+      playlistTracks.items
+    );
+
+    const playlistPopulatiryInsights =
+      InsightsService.playlistPopulatiryInsights(playlistTracks.items);
+
+    const explicitTracks = InsightsService.playlistExplicitTracks(
+      playlistTracks.items
+    );
+
+    const playlistInsights = {
       time: {
         totalDuration: durationMsToTimeString(
           playlistTimeInsights.totalDuration
@@ -60,6 +76,59 @@ export async function getPlaylistInsights(req, res) {
     };
 
     res.json(playlistInsights);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export async function getPlaylistTopTracks(req, res) {
+  const playlistId = req.params.id;
+  try {
+    const playlistTracks = await SpotifyService.getAllPlaylistTracks(
+      playlistId
+    );
+
+    const topTracks = InsightsService.playlistTopTracks(playlistTracks.items);
+
+    const response = {
+      longestTracks: topTracks.longestTracks.map((track) =>
+        reduceTrackInfo(track)
+      ),
+      shortestTracks: topTracks.shortestTracks.map((track) =>
+        reduceTrackInfo(track)
+      ),
+      mostPopularTracks: topTracks.mostPopularTracks.map((track) =>
+        reduceTrackInfo(track)
+      ),
+      leastPopularTracks: topTracks.leastPopularTracks.map((track) =>
+        reduceTrackInfo(track)
+      ),
+    };
+
+    res.json(response);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export async function getPlaylistTracks(req, res) {
+  const playlistId = req.params.id;
+
+  try {
+    const playlistTracks = await SpotifyService.getPlaylistTracks(playlistId);
+
+    const trackIds = playlistTracks.items.map((item) => item.track.id);
+
+    const severalTracksDetails = await SpotifyService.getSeveralTracksDetails(
+      trackIds
+    );
+
+    const reducedTracks = [];
+    for (let i = 0; i < severalTracksDetails.tracks.length; i++) {
+      reducedTracks.push(reduceTrackInfo(severalTracksDetails.tracks[i]));
+    }
+
+    res.json(reducedTracks);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

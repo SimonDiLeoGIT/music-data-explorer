@@ -56,14 +56,6 @@ const BarChart: React.FC<Props> = ({data, onClick, horizontal = false}) => {
             legend: {
               display: true,
             },
-            title: {
-              display: true,
-              text: data.datasets[0].label,
-              color: 'rgb(244, 244, 245)',
-              font: {
-                size: 18
-              }
-            }
           },
           scales: {
             y: {

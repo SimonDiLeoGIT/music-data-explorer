@@ -83,8 +83,20 @@ class MusicService {
     }
   }
 
+  async getPlaylistData(playlistId: string) {
+    return getRequest(`/playlists/${playlistId}`);
+  }
+
   async getPlaylistInsights(playlistId: string) {
     return getRequest(`/playlists/${playlistId}/insights`);
+  }
+
+  async getPlaylistTracks(playlistId: string) {
+    return getRequest(`/playlists/${playlistId}/tracks`);
+  }
+
+  async getPlaylistTopTracks(playlistId: string) {
+    return getRequest(`/playlists/${playlistId}/top-tracks`);
   }
 }
 

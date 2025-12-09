@@ -2,6 +2,10 @@ import type { ArtistInterface } from "./ArtistInterface"
 import type { InsightsInterface } from "./InisightsInterfaces"
 
 export interface AlbumInsightsInterface extends InsightsInterface {
+  id: string
+  name: string
+  cover: string
+  totalTracks: number
   artist: ArtistInterface
   releaseDate: string
   stats: {

@@ -155,3 +155,22 @@ export const TracksSkeleton = () => {
     </section>
   );
 };
+
+export const SkeletonChart: React.FC = () => {
+  return (
+    <div className="bg-zinc-700/30 rounded-lg p-4 animate-pulse h-full">
+      <div className="h-6 bg-zinc-600/50 rounded w-1/3 mb-4"></div>
+      <div className="space-y-3 h-[calc(100%-2rem)]">
+        {[...Array(10)].map((_, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <div className="h-4 bg-zinc-600/50 rounded flex-1"></div>
+            <div 
+              className="h-4 bg-zinc-600/50 rounded" 
+              style={{ width: `${Math.random() * 40 + 30}%` }}
+            ></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};

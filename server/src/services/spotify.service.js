@@ -174,7 +174,7 @@ class SpotifyService {
     return this.getRequest(`/playlists/${playlistId}`);
   }
 
-  async getPlaylistItems(playlistId, limit = 50, offset = 0) {
+  async getPlaylistTracks(playlistId, limit = 50, offset = 0) {
     if (!playlistId) {
       throw new Error("Playlist ID is required");
     }
@@ -183,6 +183,34 @@ class SpotifyService {
       limit,
       offset,
     });
+  }
+
+  async getAllPlaylistTracks(playlistId) {
+    if (!playlistId) {
+      throw new Error("Playlist ID is required");
+    }
+
+    let allTracks = [];
+    let offset = 0;
+    const limit = 50;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await this.getRequest(
+        `/playlists/${playlistId}/tracks`,
+        {
+          limit,
+          offset,
+        }
+      );
+
+      allTracks = allTracks.concat(response.items);
+
+      hasMore = response.next !== null;
+      offset += limit;
+    }
+
+    return { items: allTracks, total: allTracks.length };
   }
 }
 

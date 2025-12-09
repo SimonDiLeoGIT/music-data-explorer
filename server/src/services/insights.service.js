@@ -120,6 +120,44 @@ class InsightsService {
     }
     return items.filter((item) => item.track.explicit).length;
   }
+
+  playlistTopTracks(tracks) {
+    if (!tracks || tracks.length === 0) {
+      return {
+        longestTracks: [],
+        shortestTracks: [],
+        mostPopularTracks: [],
+        leastPopularTracks: [],
+      };
+    }
+
+    const validTracks = tracks
+      .map((item) => item.track)
+      .filter((track) => track && track.id);
+
+    const longestTracks = [...validTracks]
+      .sort((a, b) => b.duration_ms - a.duration_ms)
+      .slice(0, 10);
+
+    const shortestTracks = [...validTracks]
+      .sort((a, b) => a.duration_ms - b.duration_ms)
+      .slice(0, 10);
+
+    const mostPopularTracks = [...validTracks]
+      .sort((a, b) => b.popularity - a.popularity)
+      .slice(0, 10);
+
+    const leastPopularTracks = [...validTracks]
+      .sort((a, b) => a.popularity - b.popularity)
+      .slice(0, 10);
+
+    return {
+      longestTracks,
+      shortestTracks,
+      mostPopularTracks,
+      leastPopularTracks,
+    };
+  }
 }
 
 export default new InsightsService();
