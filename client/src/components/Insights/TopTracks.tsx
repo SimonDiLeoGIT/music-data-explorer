@@ -99,7 +99,7 @@ const TopTracks: React.FC<Props> = ({ topTracks}) => {
               </div>
 
               {/* Top Chart and List */}
-              <div className={`bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 ${currentTab && currentTab.color ? `border-${currentTab.color}-500/30` : "border-zinc-700/30"} hover:border-green-500/30 transition-colors`}>
+              <div className={`bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 ${currentTab && currentTab.color && `hover:border-${currentTab.color}-500/30`} transition-colors`}>
                 <h3 className={`text-lg font-semibold ${currentTab && currentTab?.color ? `text-${currentTab.color}-400` : "text-zinc-400"} mb-3 flex items-center gap-2`}>
                   Top 10 {currentTab?.label} Tracks
                 </h3>

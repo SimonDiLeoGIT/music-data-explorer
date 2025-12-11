@@ -2,6 +2,7 @@ import SpotifyService from "../services/spotify.service.js";
 import InsightsService from "../services/insights.service.js";
 import LastfmService from "../services/lastfm.service.js";
 import { durationMsToTimeString } from "../utils/TimeFormater.js";
+import puppeteer from "puppeteer";
 
 function reduceTrackInfo(track) {
   return {
@@ -273,5 +274,23 @@ export async function albumsPopularityInsights(req, res) {
     res.json(albumsPopularity);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+}
+
+export async function exportAlbumInsights(req, res) {
+  try {
+    const { html, styles } = req.body;
+
+    const pdf = await exportPDFService.generatePDF(html, styles);
+
+    res.contentType("application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="album-report-${req.params.id}.pdf"`
+    );
+    res.send(pdf);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    res.status(500).json({ error: "Failed to generate PDF" });
   }
 }
