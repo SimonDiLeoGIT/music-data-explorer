@@ -20,7 +20,7 @@ export interface ArtistInterface {
   albums: AlbumInterface[]
 }
 
-interface TrackInterface {
+export interface TrackInterface {
   id: string
   name: string
   duration: string
@@ -33,7 +33,7 @@ interface TrackInterface {
   explicit: boolean
 }
 
-interface AlbumInterface {
+export interface AlbumInterface {
   id: string
   name: string
   cover: string

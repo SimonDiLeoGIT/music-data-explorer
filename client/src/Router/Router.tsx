@@ -4,6 +4,7 @@ import Home from '../pages/Home/Home';
 import Album from '../pages/Album/Album';
 import Playlist from '../pages/Playlist/Playlist';
 import Artist from '../pages/Artist/Artist';
+import Genres from '../pages/Genres/Genres';
 
 
 const Router = () => {
@@ -14,6 +15,7 @@ const Router = () => {
       </header>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/genres-insights" element={<Genres />} />
         <Route path="/albums/:id" element={<Album />} />
         <Route path="/playlists/:id" element={<Playlist />} />
         <Route path="/artists/:id/" element={<Artist />} />

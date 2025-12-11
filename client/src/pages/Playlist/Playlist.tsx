@@ -9,6 +9,8 @@ import TopTracks from "../../components/Insights/TopTracks";
 import type { InsightsInterface } from "../../interfaces/InisightsInterfaces";
 import TopArtists from "./components/TopArtists";
 import ExplicitTracks from "../../components/Insights/ExplicitTracks";
+import ExplicitTracksSkeleton from "../../components/Skeleton/ExplicitTracksSkeleton";
+import { formatNumber, formatNumberWithCommas } from "../../utils/formatNumbers";
 
 const Playlist = () => {
 
@@ -59,54 +61,54 @@ const Playlist = () => {
   }, [id])
 
   return( 
-    <main className='p-8 py-4 w-11/12 max-w-[1600px] mx-auto'>
+    <main className='p-1 md:p-8 py-4 md:w-11/12 max-w-[1600px] mx-auto'>
       {
         loading || !playlist ?
         <PlaylistHeaderSkeleton />
         :
         <header className="bg-zinc-800 p-4 rounded-t-md relative overflow-hidden">
           {
-            playlist?.cover &&
+            playlist.cover &&
             <div
-            className="absolute inset-0 bg-cover bg-center blur-xl brightness-40 scale-110"
-            style={{ backgroundImage: `url(${playlist?.cover})` }}
+              className="absolute inset-0 bg-cover bg-center blur-xl brightness-40 scale-110"
+              style={{ backgroundImage: `url(${playlist.cover})` }}
             />
           }
-          <section className="flex relative z-10">
-            <img src={playlist?.cover} alt="Album Cover" className="w-64 h-64 rounded"/>
-            <div className="m-auto mb-0 ml-4 text-zinc-100 font-semibold flex flex-col gap-2">
-              <p className="text-sm">Playlist</p>
-              <p className="text-5xl">{playlist?.name}</p>
+          <section className="flex flex-col md:flex-row relative z-10">
+            <img src={playlist.cover} alt="Album Cover" className="w-64 h-64 rounded mx-auto md:mx-0"/>
+            <div className="flex flex-col justify-end center m-auto mb-0  md:ml-4 mt-4 md:mt-0 text-zinc-100 font-semibold gap-2 text-center md:text-left">
+              <p className="text-sm">Album</p>
+              <p className="text-3xl md:text-5xl">{playlist.name}</p>
             </div>
           </section>
-          <section className="absolute bottom-0 right-0 p-4 grid grid-cols-2 gap-4 z-50">
+          <section className="relative md:absolute top-0 right-0 p-4 grid grid-cols-2 gap-4 z-50 mt-4 md:mt-0">
             <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 shadow-md hover:cursor-default">
               <h2 className="text-lg font-semibold text-center">Songs</h2>
               {
-                playlist?.totalTracks &&
-                <p className="font-semibold text-2xl text-purple-400 m-auto text-center">
-                  {playlist?.totalTracks}
+                playlist.totalTracks &&
+                <p 
+                  className="font-semibold text-2xl text-purple-400 m-auto text-center"
+                  title={formatNumberWithCommas(playlist.totalTracks)}
+                >
+                  {formatNumber(playlist.totalTracks)}
                 </p>
               }
             </article>
-            {
-              insights?.time.totalDuration ?
-              <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 place-content-center shadow-md hover:cursor-default">
-                <h2 className="text-lg font-semibold text-center">Duration</h2>
-                {
-                  insights?.time.totalDuration &&
-                  <p className="font-semibold text-2xl text-purple-400 m-auto text-center">
-                    {insights?.time.totalDuration}
-                  </p>
-                }
-              </article>
-              :
-              <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-2 shadow-md w-32">
-                <div className="h-6 w-20 bg-zinc-600 rounded animate-pulse mx-auto" />
-                <div className="h-8 w-16 bg-zinc-600 rounded animate-pulse mx-auto" />
-              </article>
-            }
-        </section>
+            <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 place-content-center shadow-md hover:cursor-default">
+              <h2 className="text-lg font-semibold text-center">Duration</h2>
+              {
+                insights?.time?.totalDuration ?
+                <p 
+                  className="font-semibold text-2xl text-purple-400 m-auto text-center"
+                  title={insights.time.totalDuration}
+                >
+                  {insights.time.totalDuration}
+                </p>
+                :
+                <p className="font-semibold text-2xl text-purple-400 m-auto text-center">0h 00m</p>
+              }
+            </article>
+          </section>
         </header>
       }
       {
@@ -115,23 +117,25 @@ const Playlist = () => {
         : 
         <PlaylistCards insights={insights} />
       }
-      {
-        id &&
-        <TopTracks topTracks={topTracks} />
-      }
-      <section className="grid grid-cols-2 gap-4 bg-zinc-900 p-4 rounded-b-md">
+      <section className="grid md:grid-cols-2 gap-4 bg-zinc-900 p-4 rounded-b-md">
         {
           id &&
           <TopArtists playlistId={id} />
         }
         { 
-          playlist && insights &&
+          loading || !playlist || !insights ?
+          <ExplicitTracksSkeleton />
+          :
           <ExplicitTracks
             totalTracks={playlist.totalTracks}
             explicitTracks={insights.explicitTracks}
           />
         }
       </section>
+      {
+        id &&
+        <TopTracks topTracks={topTracks} />
+      }
     </main>
   )
 }

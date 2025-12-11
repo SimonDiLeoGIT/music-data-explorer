@@ -80,11 +80,11 @@ const TopArtists: React.FC<Props> = ({ playlistId }) => {
   };
   
   return (
-    <section className="bg-zinc-800/50 p-4 rounded">
+    <section className="bg-zinc-800/50 p-4">
       <h2 className="text-zinc-100 text-xl font-semibold mb-6">
-        Top 10 Most Frequent Artists
+        Top 10 Frequent Artists
       </h2>
-      <div className="h-[300px]">
+      <div className="h-40">
         {topArtists && (
           <Doughnut data={data} options={options} />
         )}

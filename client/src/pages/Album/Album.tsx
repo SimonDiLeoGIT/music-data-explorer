@@ -10,6 +10,7 @@ import TopTracks from "../../components/Insights/TopTracks";
 import type { TopTracksInterface } from "../../interfaces/TrackInterface";
 import type { InsightsInterface } from "../../interfaces/InisightsInterfaces";
 import ExplicitTracks from "../../components/Insights/ExplicitTracks";
+import ExplicitTracksSkeleton from "../../components/Skeleton/ExplicitTracksSkeleton";
 
 const Album = () => {
 
@@ -60,7 +61,7 @@ const Album = () => {
   }, [id])
 
   return( 
-    <main className='p-8 py-4 w-11/12 max-w-[1600px] mx-auto'>
+    <main className='p-1 md:p-8 py-4 md:w-11/12 max-w-[1600px] mx-auto'>
       {
         loading || !album ?
         <PlaylistHeaderSkeleton />
@@ -73,11 +74,11 @@ const Album = () => {
               style={{ backgroundImage: `url(${album?.cover})` }}
             />
           }
-          <section className="flex relative z-10">
-            <img src={album?.cover} alt="Album Cover" className="w-64 h-64 rounded"/>
-            <div className="m-auto mb-0 ml-4 text-zinc-100 font-semibold flex flex-col gap-2">
+          <section className="flex flex-col md:flex-row relative z-10">
+            <img src={album?.cover} alt="Album Cover" className="w-64 h-64 rounded mx-auto md:mx-0"/>
+            <div className="flex flex-col justify-end center m-auto mb-0  md:ml-4 mt-4 md:mt-0 text-zinc-100 font-semibold gap-2 text-center md:text-left">
               <p className="text-sm">Album</p>
-              <p className="text-5xl">{album?.name}</p>
+              <p className="text-3xl md:text-5xl">{album?.name}</p>
               <p className="text-sm">{album?.artist.name} 
                 <span className="text-zinc-400">
                   &bull; {album?.releaseDate} &bull; {album?.totalTracks} songs, {insights?.time?.totalDuration}
@@ -85,7 +86,7 @@ const Album = () => {
               </p>
             </div>
           </section>
-          <section className="absolute bottom-0 right-0 p-4 grid grid-cols-2 gap-4 z-50">
+          <section className="relative md:absolute top-0 right-0 p-4 grid grid-cols-2 gap-4 z-50 mt-4 md:mt-0">
             <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-1 shadow-md hover:cursor-default">
               <h2 className="text-lg font-semibold text-center">Listeners</h2>
               {
@@ -110,7 +111,7 @@ const Album = () => {
                 </p>
               }
             </article>
-        </section>
+          </section>
         </header>
       }
       {
@@ -125,16 +126,18 @@ const Album = () => {
         : 
         <PlaylistCards insights={insights} />
       }
-      {
-        id &&
-        <TopTracks topTracks={topTracks} />
-      }
       { 
-        !loading && album && insights &&
+        loading || !album || !insights ?
+        <ExplicitTracksSkeleton />
+        :
         <ExplicitTracks
           totalTracks={album.totalTracks}
           explicitTracks={insights.explicitTracks}
         />
+      }
+      {
+        id &&
+        <TopTracks topTracks={topTracks} />
       }
     </main>
   )

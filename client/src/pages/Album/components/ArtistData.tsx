@@ -9,15 +9,15 @@ interface Props {
 const ArtistData: React.FC<Props> = ({artist}) => {
 
   return (
-    <section className="bg-zinc-700 p-2 text-sm flex gap-2">
-      <div className="w-10/12">
+    <section className="bg-zinc-700 p-2 text-sm flex flex-col md:flex-row gap-2">
+      <div className="w-full md:w-10/12">
         <div className="flex items-center">
           <img src={artist.image} alt={artist.name + 's image '} className="w-8 h-8 rounded-full float-left mr-2"/>
           <span className="font-semibold">{artist.name}</span>
         </div>
         <HtmlRenderer text={artist.bio} />
       </div>
-      <div className="grid grid-cols-2 gap-2 m-auto p-2">
+      <div className="grid grid-cols-2 gap-2 m-auto p-2 w-full md:w-auto">
         <article className="bg-zinc-900/50 p-4 rounded-md flex flex-col shadow-md hover:cursor-default">
           <h2 className="font-semibold text-center">Listeners</h2>
           {

@@ -2,7 +2,6 @@ import SpotifyService from "../services/spotify.service.js";
 import InsightsService from "../services/insights.service.js";
 import { durationMsToTimeString } from "../utils/TimeFormater.js";
 import LastfmService from "../services/lastfm.service.js";
-import { processBatch } from "../utils/ProcessBatch.js";
 
 function reduceTrackInfo(track) {
   return {

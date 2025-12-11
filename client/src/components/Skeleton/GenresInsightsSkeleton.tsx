@@ -1,67 +1,62 @@
-const GenresInsightsSkeleton = () => {
+export const GenresInsightsSkeleton = () => {
   return (
     <div className="animate-pulse">
-      <div className="flex gap-4">
-        <div className="w-2/3 h-[500px] bg-zinc-800 rounded-md"></div>
-        <div className="flex-1 flex flex-col justify-center gap-4">
-          <TopCardSkeleton />
-          <TopCardSkeleton />
-          <TopCardSkeleton />
+      <div className="my-6">
+        <div className="w-full h-[500px] bg-zinc-800 rounded-md"></div>
+      </div>
+      <div className="my-6">
+        <GenreTopSectionSkeleton />
+        <GenreTopSectionSkeleton />
+        <GenreTopSectionSkeleton />
+      </div>
+    </div>
+  )
+}
+
+export const GenreTopSectionSkeleton = () => {
+  return (
+    <div className="bg-zinc-800/50 p-6 rounded-lg animate-pulse">
+      {/* Título */}
+      <div className="h-7 bg-zinc-700 w-64 rounded mb-4"></div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Lista Top 5 */}
+        <div>
+          <ul className="space-y-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <li 
+                key={i} 
+                className="flex gap-3 items-center bg-zinc-800 p-4 rounded-md"
+              >
+                <div className="h-6 w-6 bg-zinc-700 rounded"></div>
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 bg-zinc-700 rounded w-3/4"></div>
+                  {i % 2 === 0 && (
+                    <div className="h-3 bg-zinc-700 rounded w-1/2"></div>
+                  )}
+                </div>
+                <div className="h-4 w-4 bg-zinc-700 rounded"></div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Gráfico */}
+        <div className="bg-zinc-800 p-4 rounded-lg">
+          <div className="h-4 bg-zinc-700 w-40 rounded mb-4"></div>
+          <div className="h-[400px] flex items-end justify-around gap-2">
+            {[85, 65, 95, 50, 70].map((height, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                <div 
+                  className="w-full bg-zinc-700 rounded-t"
+                  style={{ height: `${height}%` }}
+                ></div>
+                <div className="h-3 w-6 bg-zinc-700 rounded"></div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="h-4 bg-zinc-800 rounded w-1/3 mt-2"></div>
-      <div className="grid grid-cols-3 gap-4 mt-4 bg-zinc-900 p-4 rounded-md">
-        <TopFiveListSkeleton />
-        <TopFiveListSkeleton />
-        <TopFiveListSkeleton />
-      </div>
-      <div className="grid grid-cols-3 gap-4 p-4">
-        <TopChartSkeleton />
-        <TopChartSkeleton />
-        <TopChartSkeleton />
-      </div>
     </div>
-  )
-}
-
-const TopCardSkeleton = () => {
-  return (
-    <article className="flex gap-2 bg-zinc-700/80 p-2 rounded-md animate-pulse">
-      <span className="h-full bg-zinc-600 w-[1.5px]"></span>
-      <div className="space-y-2 flex-1">
-        <div className="h-5 bg-zinc-600 rounded w-24"></div>
-        <div className="h-4 bg-zinc-600 rounded w-3/4"></div>
-      </div>
-    </article>
-  )
-}
-
-const TopFiveListSkeleton = () => {
-  return (
-    <div className="flex-1 animate-pulse">
-      <div className="h-6 bg-zinc-700 rounded w-32 mb-2"></div>
-      <div className="mt-4">
-        <ul className="space-y-2">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <li 
-              key={index} 
-              className="flex gap-2 items-center bg-zinc-800/80 p-4 rounded-md w-full"
-            >
-              <div className="h-4 bg-zinc-700 rounded w-6"></div>
-              <div className="h-4 bg-zinc-700 rounded flex-1"></div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
-}
-
-const TopChartSkeleton = () => {
-  return (
-    <div className="h-[400px] bg-zinc-800 rounded-md animate-pulse"></div>
-  )
-}
-
-export default GenresInsightsSkeleton
-export { TopCardSkeleton, TopFiveListSkeleton, TopChartSkeleton }
+  );
+};

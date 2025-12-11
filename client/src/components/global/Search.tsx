@@ -3,6 +3,7 @@ import { musicService } from "../../services/music.service";
 import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import type { SearchResultInterface } from "../../interfaces/Search";
+import { SiMusicbrainz } from "react-icons/si";
 
 const Search = () => {
 
@@ -42,26 +43,29 @@ const Search = () => {
     setIsOpen(false);
   }
 
+
+
   return (
-    <div className="relative">
-      <div className="flex gap-2 items-center justify-center text-zinc-100">
+    <div className="w-full">
+      <div className=" flex p-2 gap-2 text-zinc-100 w-full m-auto max-w-[600px]">
         <Link to="/"
-          className="rounded-full p-3 bg-zinc-800/80 hover:bg-zinc-700/80 hover:cursor-pointer"
+          className="rounded-full h-10 w-10 flex items-center justify-center bg-zinc-800/80 hover:bg-zinc-700/80 hover:cursor-pointer"
+          title="Home"
         >
           <FaHome className="" />
         </Link>
-        <div>
+        <div className="flex-1 relative">
           <input 
             type="text"
             placeholder="Search..."
-            className="p-2 px-4 rounded-full w-[460px] bg-zinc-800/80 focus:outline-none"
+            className="p-2 px-4 w-full rounded-full bg-zinc-800/80 focus:outline-none"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
           {
             isOpen && (
-              <div className="absolute w-[460px] z-50 text-start bg-zinc-800 max-h-96 overflow-y-scroll p-2 mt-1.5 rounded-md shadow-md space-y-1">
-                <div>
+              <aside className="absolute w-full z-50 text-start bg-zinc-800 max-h-96 overflow-y-scroll p-2 mt-1.5 rounded-md shadow-md space-y-1">
+                <div className="">
                   <p className="font-semibold text-sm p-2 border-b border-zinc-700/50">Albums</p>
                   {results?.albums.map((album) => (
                     <Link 
@@ -110,13 +114,19 @@ const Search = () => {
                     </Link>
                   ))}
                 </div>
-              </div>
+              </aside>
             )
           }
         </div>
+        <Link to="/genres-insights"
+            className="rounded-full h-10 w-10 flex items-center justify-center bg-zinc-800/80 hover:bg-zinc-700/80 hover:cursor-pointer"
+            title="Genres Insights"
+          >
+          <SiMusicbrainz />
+        </Link>
       </div>
       {isOpen && (
-        <div 
+        <aside 
           className="fixed inset-0 z-40 top-20"
           onClick={handleSelect}
         />
