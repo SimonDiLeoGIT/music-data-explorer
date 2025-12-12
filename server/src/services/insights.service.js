@@ -239,4 +239,4 @@ class InsightsService {
   }
 }
 
-export default new InsightsService();
+export default InsightsService;

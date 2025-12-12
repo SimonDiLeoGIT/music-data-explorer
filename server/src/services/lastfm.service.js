@@ -73,4 +73,4 @@ class LastfmService {
   }
 }
 
-export default new LastfmService();
+export default LastfmService;
