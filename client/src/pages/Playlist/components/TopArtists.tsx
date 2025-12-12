@@ -4,6 +4,7 @@ import type { PlaylistArtistsFrequencyInterface } from "../../../interfaces/Play
 import { Doughnut } from "react-chartjs-2";
 import * as Chart from 'chart.js';
 import { generateColors } from "../../../utils/colorsGenerator";
+import TopArtistsSkeleton from "../../../components/Skeleton/TopArtistsSkeleton";
 Chart.Chart.register(...Chart.registerables);
 
 interface Props {
@@ -13,13 +14,17 @@ interface Props {
 const TopArtists: React.FC<Props> = ({ playlistId }) => {
   
   const [topArtists, setTopArtists] = useState<PlaylistArtistsFrequencyInterface|null>(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchTopArtists = async () => {
+    setLoading(true);
     try {
       const data = await musicService.getPlaylistTopArtists(playlistId);
       setTopArtists(data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -78,11 +83,15 @@ const TopArtists: React.FC<Props> = ({ playlistId }) => {
     },
     cutout: '60%',
   };
+
+  if (loading) {
+    return <TopArtistsSkeleton />
+  }
   
   return (
     <section className="bg-zinc-800/50 p-4">
       <h2 className="text-zinc-100 text-xl font-semibold mb-6">
-        Top 10 Frequent Artists
+        Top 5 Frequent Artists
       </h2>
       <div className="h-40">
         {topArtists && (

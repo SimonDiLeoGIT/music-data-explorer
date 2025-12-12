@@ -17,6 +17,10 @@ const Genres = () => {
   const [isLoadingGenreData, setIsLoadingGenreData] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
 
+  useEffect(() => {
+    document.title = "Genres | MDE";
+  }, []);
+
  useEffect(() => {
     const fetchTopGenres = async () => {
       setIsLoadingGenres(true);
@@ -81,30 +85,32 @@ const Genres = () => {
 
   return (
     <main className='p-1 md:p-8 py-4 md:w-11/12 max-w-[1600px] mx-auto'>
-      <h2 className="text-zinc-100 text-3xl font-bold">Genres Insights</h2>
-      <button
-        onClick={handleExportPDF}
-        disabled={isLoadingGenreData || isLoadingGenres || isExporting}
-        className="hover:cursor-pointer col-span-2 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md flex items-center justify-center gap-2 transition-colors"
-      >
-        {isExporting ? (
-          <>
-            <FaSpinner className="animate-spin" />
-            Exporting...
-          </>
-        ) : (
-          <>
-            <FaFilePdf />
-            Export Report
-          </>
-        )}
-      </button>
-      <div className="mt-4 bg-zinc-900 p-4 rounded-md">
+      <div className="flex flex-col gap-2 md:flex-row md justify-between">
+        <h2 className="text-zinc-100 text-3xl font-bold">Genres Insights</h2>
+        <button
+          onClick={handleExportPDF}
+          disabled={isLoadingGenreData || isLoadingGenres || isExporting}
+          className="hover:cursor-pointer col-span-2 bg-purple-500 hover:bg-purple-600 max-w-[200px] disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md flex items-center justify-center gap-2 transition-colors"
+          >
+          {isExporting ? (
+            <>
+              <FaSpinner className="animate-spin" />
+              Exporting...
+            </>
+          ) : (
+            <>
+              <FaFilePdf />
+              Export Report
+            </>
+          )}
+        </button>
+      </div>
       <p className="text-zinc-400 text-xs mt-2">Data sourced from Last.fm's top user-tagged genres</p>
+      <div className="mt-4">
         {isLoadingGenres ? (
           <GenresInsightsSkeleton />
         ) : (
-          <div className="mt-6">
+          <div className=" bg-zinc-800/50 p-4 rounded-md">
             <h3 className="text-zinc-300 text-sm font-semibold mb-4">Top Genres by User Tags</h3>
             <div className="gap-4">
               <div className="h-[500px]">

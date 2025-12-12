@@ -23,6 +23,10 @@ const Playlist = () => {
   const [loading, setLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
 
+  useEffect(() => {
+    document.title = "Playlist | MDE";
+  }, []);
+
   const fetchData = async () => {
     if (!id) return;
     setLoading(true);
@@ -162,7 +166,7 @@ const Playlist = () => {
         : 
         <PlaylistCards insights={insights} />
       }
-      <section className="grid md:grid-cols-2 gap-4 bg-zinc-900 p-4 rounded-b-md">
+      <section className="grid lg:grid-cols-2 gap-4 bg-zinc-900 p-4 rounded-b-md">
         {
           id &&
           <TopArtists playlistId={id} />

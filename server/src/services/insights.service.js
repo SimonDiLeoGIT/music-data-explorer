@@ -233,7 +233,7 @@ class InsightsService {
 
     const artistsFrequency = Object.values(artistCounts)
       .sort((a, b) => b.count - a.count)
-      .slice(0, 10);
+      .slice(0, 5);
 
     return { artistsFrequency };
   }

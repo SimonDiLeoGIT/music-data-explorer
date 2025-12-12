@@ -23,6 +23,10 @@ const Album = () => {
   const [loading, setLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
 
+  useEffect(() => {
+    document.title = "Album | MDE";
+  }, []);
+
   const fetchData = async () => {
     if (!id) return;
     setLoading(true);

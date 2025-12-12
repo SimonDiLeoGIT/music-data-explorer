@@ -18,6 +18,10 @@ const Artist = () => {
   const [loading, setLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
 
+  useEffect(() => {
+    document.title = "Artist | MDE";
+  }, []);
+
   const fetchArtistData = async () => {
     if (!id) return;
     setLoading(true);

@@ -74,7 +74,7 @@ const ExplicitTracks: React.FC<Props> = ({ totalTracks, explicitTracks }) => {
       </h2>
       
       <div className="flex flex-col md:flex-row gap-6 items-center">
-        <div className="relative w-40 h-40 shrink-0">
+        <div className="relative w-40 h-40">
           <Doughnut data={data} options={options} />
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             <p className="text-3xl font-bold text-zinc-100">{totalTracks}</p>

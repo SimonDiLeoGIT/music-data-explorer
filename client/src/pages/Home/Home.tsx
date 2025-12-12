@@ -9,6 +9,10 @@ const Home = () => {
   const [newReleases, setNewReleases] = useState<NewReleaseInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  useEffect(() => {
+    document.title = "Home | MDE";
+  }, []);
+
   const fetchNewReleases = async () => {
     const data =  await musicService.getNewReleases();
     setNewReleases(data);
@@ -23,7 +27,6 @@ const Home = () => {
       setLoading(false);
     }
   }, [newReleases])
-
 
   return (
     <main className='p-1 md:p-8 py-4 md:w-11/12 max-w-[1600px] mx-auto'>

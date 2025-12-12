@@ -6,7 +6,6 @@ import Playlist from '../pages/Playlist/Playlist';
 import Artist from '../pages/Artist/Artist';
 import Genres from '../pages/Genres/Genres';
 
-
 const Router = () => {
   return (
     <>

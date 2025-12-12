@@ -86,10 +86,9 @@ export const generatePlaylistReportHTML = (
           </div>
         </div>
 
-        <h3 class="section-subtitle">Top 10 Most Frequent Artists</h3>
+        <h3 class="section-subtitle">Top 5 Most Frequent Artists</h3>
         <ol class="track-list artist-list">
           ${topArtists.artistsFrequency
-            .slice(0, 10)
             .map(
               (item, index) => `
             <li class="track-item">
