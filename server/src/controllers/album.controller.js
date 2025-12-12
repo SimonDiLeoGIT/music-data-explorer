@@ -71,16 +71,18 @@ export async function albumData(req, res) {
 }
 
 export async function albumInsights(req, res) {
+  console.log("Calculating album insights...");
   const albumId = req.params.id;
 
   try {
+    console.log("Fetching album data...");
     // Album Data
     const albumData = await SpotifyService.getAlbumData(albumId);
-
+    console.log("Album data fetched successfully");
     const albumTimeInsights = InsightsService.albumTimeInsights(
       albumData.tracks.items
     );
-
+    console.log("Album time insights calculated successfully");
     const explicitTracks = InsightsService.albumExplicitTracks(
       albumData.tracks.items
     );
@@ -93,7 +95,7 @@ export async function albumInsights(req, res) {
     const albumPopulatiryInsights = InsightsService.albumPopulatiryInsights(
       tracksDetails.tracks
     );
-
+    console.log("Album popularity insights calculated successfully");
     const albumInsights = {
       time: {
         totalDuration: durationMsToTimeString(albumTimeInsights.totalDuration),
@@ -114,7 +116,7 @@ export async function albumInsights(req, res) {
       },
       explicitTracks,
     };
-
+    console.log("Album insights calculated successfully");
     res.json(albumInsights);
   } catch (err) {
     res.status(500).json({ error: err.message });
