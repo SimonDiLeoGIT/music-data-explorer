@@ -42,4 +42,4 @@ class ExportPDFService {
   }
 }
 
-export default ExportPDFService;
+export default new ExportPDFService();
