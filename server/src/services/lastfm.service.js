@@ -1,8 +1,4 @@
 import axios from "axios";
-import dotenv from "dotenv";
-
-dotenv.config();
-
 class LastfmService {
   constructor() {
     this.baseUrl = process.env.LASTFM_API_BASE_URL;
