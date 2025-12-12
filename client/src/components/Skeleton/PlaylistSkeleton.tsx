@@ -162,21 +162,6 @@ export const SkeletonChart: React.FC = () => {
       {/* Header */}
       <div className="h-6 bg-zinc-700/50 rounded w-1/4 mb-4"></div>
       <div className="flex gap-4 items-center">
-        {/* Chart Skeleton */}
-        <div className="w-2/3 h-[400px] bg-zinc-700/30 rounded-lg p-4">
-          <div className="h-full flex flex-col justify-end gap-2">
-            {[...Array(10)].map((_, i) => (
-              <div 
-                key={i} 
-                className="bg-zinc-600/50 rounded"
-                style={{ 
-                  height: `${Math.random() * 60 + 20}%`,
-                  width: '100%'
-                }}
-              ></div>
-            ))}
-          </div>
-        </div>
         
         {/* List Skeleton */}
         <div className="flex-1 rounded-lg p-4">
@@ -193,6 +178,22 @@ export const SkeletonChart: React.FC = () => {
                   style={{ width: `${Math.random() * 30 + 40}px` }}
                 ></div>
               </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Chart Skeleton */}
+        <div className="w-2/3 h-[400px] bg-zinc-700/30 rounded-lg p-4">
+          <div className="h-full flex flex-col justify-end gap-2">
+            {[...Array(10)].map((_, i) => (
+              <div 
+                key={i} 
+                className="bg-zinc-600/50 rounded"
+                style={{ 
+                  height: `${Math.random() * 60 + 20}%`,
+                  width: '100%'
+                }}
+              ></div>
             ))}
           </div>
         </div>

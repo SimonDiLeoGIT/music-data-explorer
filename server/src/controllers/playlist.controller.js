@@ -1,7 +1,9 @@
 import SpotifyService from "../services/spotify.service.js";
 import InsightsService from "../services/insights.service.js";
 import { durationMsToTimeString } from "../utils/TimeFormater.js";
-import LastfmService from "../services/lastfm.service.js";
+import { generatePlaylistReportHTML } from "../templates/playlist/playlist.template.js";
+import ExportPDFService from "../services/exportPDF.service.js";
+import { playlistReportStyles } from "../templates/playlist/playlist.styles.js";
 
 function reduceTrackInfo(track) {
   return {
@@ -163,5 +165,54 @@ export async function getPlaylistTracks(req, res) {
     res.json(reducedTracks);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+}
+
+export async function exportPlaylistInsights(req, res) {
+  try {
+    const { playlist, insights, topTracks } = req.body;
+
+    const playlistTracks = await SpotifyService.getAllPlaylistTracks(
+      playlist.id
+    );
+
+    const artists = [];
+    for (const item of playlistTracks.items) {
+      if (!item.track || !item.track.artists) continue;
+      for (const artist of item.track.artists) {
+        artists.push(artist);
+      }
+    }
+
+    const reducedArtistsData = artists.map((artist) => ({
+      id: artist.id,
+      name: artist.name,
+    }));
+
+    const topArtists =
+      InsightsService.playlistArtistsFrequency(reducedArtistsData);
+
+    topArtists.totalArtists = playlistTracks.items.length;
+
+    const html = generatePlaylistReportHTML(
+      playlist,
+      insights,
+      topTracks,
+      topArtists
+    );
+    const pdf = await ExportPDFService.generatePDF(html, playlistReportStyles);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="playlist-${playlist.name.replace(
+        /[^a-z0-9]/gi,
+        "_"
+      )}-report.pdf"`
+    );
+    res.send(pdf);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    res.status(500).json({ error: "Failed to generate PDF" });
   }
 }

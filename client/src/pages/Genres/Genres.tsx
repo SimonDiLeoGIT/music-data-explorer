@@ -4,6 +4,7 @@ import type { GenreInterface, TopGenreTagInterface } from "../../interfaces/Gend
 import BarChart from "../../components/charts/BarChart";
 import { GenreTopSectionSkeleton, GenresInsightsSkeleton } from "../../components/Skeleton/GenresInsightsSkeleton";
 import GenreTopSection from "./components/GenreTopSection";
+import { FaFilePdf, FaSpinner } from "react-icons/fa";
 
 const Genres = () => {
 
@@ -14,6 +15,7 @@ const Genres = () => {
   const [genreAlbums, setGenreAlbums] = useState<TopGenreTagInterface[]>([]);
   const [isLoadingGenres, setIsLoadingGenres] = useState(true);
   const [isLoadingGenreData, setIsLoadingGenreData] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
 
  useEffect(() => {
     const fetchTopGenres = async () => {
@@ -49,9 +51,54 @@ const Genres = () => {
     fetchGenreData();
   }, [currentGenre])
 
+  const handleExportPDF = async () => {
+    if (!currentGenre || !genreArtists || !genreTracks || !genreAlbums) return;
+    
+    setIsExporting(true);
+    try {
+      const response = await musicService.exportGenreInsights({
+        topGenres,
+        genreName: currentGenre,
+        topArtist: genreArtists,
+        topTracks: genreTracks,
+        topAlbums: genreAlbums
+      });
+      
+      // Crear un blob y descargarlo
+      const blob = new Blob([response], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `genre-${currentGenre}-report.pdf`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <main className='p-1 md:p-8 py-4 md:w-11/12 max-w-[1600px] mx-auto'>
       <h2 className="text-zinc-100 text-3xl font-bold">Genres Insights</h2>
+      <button
+        onClick={handleExportPDF}
+        disabled={isLoadingGenreData || isLoadingGenres || isExporting}
+        className="hover:cursor-pointer col-span-2 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md flex items-center justify-center gap-2 transition-colors"
+      >
+        {isExporting ? (
+          <>
+            <FaSpinner className="animate-spin" />
+            Exporting...
+          </>
+        ) : (
+          <>
+            <FaFilePdf />
+            Export Report
+          </>
+        )}
+      </button>
       <div className="mt-4 bg-zinc-900 p-4 rounded-md">
       <p className="text-zinc-400 text-xs mt-2">Data sourced from Last.fm's top user-tagged genres</p>
         {isLoadingGenres ? (

@@ -1,4 +1,7 @@
+import ExportPDFService from "../services/exportPDF.service.js";
 import LastfmService from "../services/lastfm.service.js";
+import { genreReportStyles } from "../templates/genre/genre.styles.js";
+import { generateGenreReportHTML } from "../templates/genre/genre.template.js";
 
 export async function getTopGenres(req, res) {
   try {
@@ -142,5 +145,33 @@ export async function getTopGenreAlbums(req, res) {
     res.json(reducedAlbumsData);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+}
+
+export async function exportGenreReport(req, res) {
+  try {
+    const { topGenres, genreName, topArtist, topTracks, topAlbums } = req.body;
+
+    const html = generateGenreReportHTML(
+      topGenres,
+      genreName,
+      topArtist,
+      topTracks,
+      topAlbums
+    );
+    const pdf = await ExportPDFService.generatePDF(html, genreReportStyles);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="genre-${genreName.replace(
+        /[^a-z0-9]/gi,
+        "_"
+      )}-report.pdf"`
+    );
+    res.send(pdf);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    res.status(500).json({ error: "Failed to generate PDF" });
   }
 }

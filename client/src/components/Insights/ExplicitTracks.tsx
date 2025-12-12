@@ -14,8 +14,6 @@ const ExplicitTracks: React.FC<Props> = ({ totalTracks, explicitTracks }) => {
   const explicitPercentage = totalTracks > 0 ? ((explicitTracks / totalTracks) * 100).toFixed(1) : 0;
   const cleanPercentage = totalTracks > 0 ? ((cleanTracks / totalTracks) * 100).toFixed(1) : 0;
 
-  const maxValue = Math.max(explicitTracks, cleanTracks);
-
   const data = {
     labels: ['Explicit', 'Clean'],
     datasets: [
@@ -97,7 +95,7 @@ const ExplicitTracks: React.FC<Props> = ({ totalTracks, explicitTracks }) => {
             <div className="mt-3 h-2 bg-zinc-900/50 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-red-500 rounded-full transition-all duration-500"
-                style={{ width: `${(explicitTracks / maxValue) * 100}%` }}
+                style={{ width: `${(explicitTracks / totalTracks) * 100}%` }}
               ></div>
             </div>
           </div>
@@ -114,7 +112,7 @@ const ExplicitTracks: React.FC<Props> = ({ totalTracks, explicitTracks }) => {
             <div className="mt-3 h-2 bg-zinc-900/50 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-green-500 rounded-full transition-all duration-500"
-                style={{ width: `${(cleanTracks / maxValue) * 100}%` }}
+                style={{ width: `${(cleanTracks / totalTracks) * 100}%` }}
               ></div>
             </div>
           </div>

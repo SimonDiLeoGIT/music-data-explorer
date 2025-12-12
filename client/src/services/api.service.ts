@@ -12,5 +12,22 @@ export async function getRequest(url : string, params = {}) {
   } catch (error) {
     console.error('Error fetching data:', error);
   }
-  
+
+}
+
+export async function downloadPDF(url: string, data = {}) {
+  try {
+    const response = await axios.post(`${SERVER_BASE_URL}${url}`, data, {
+      responseType: 'blob'
+    });
+    
+    if (response.status !== 200) {
+      throw new Error('Network response was not ok');
+    }
+    
+    return response.data; // Esto devuelve un Blob
+  } catch (error) {
+    console.error('Error downloading PDF:', error);
+    throw error;
+  }
 }

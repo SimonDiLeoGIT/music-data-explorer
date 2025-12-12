@@ -2,7 +2,9 @@ import SpotifyService from "../services/spotify.service.js";
 import InsightsService from "../services/insights.service.js";
 import LastfmService from "../services/lastfm.service.js";
 import { durationMsToTimeString } from "../utils/TimeFormater.js";
-import puppeteer from "puppeteer";
+import { generateAlbumReportHTML } from "../templates/album/album.template.js";
+import { albumReportStyles } from "../templates/album/album.styles.js";
+import ExportPDFService from "../services/exportPDF.service.js";
 
 function reduceTrackInfo(track) {
   return {
@@ -279,14 +281,18 @@ export async function albumsPopularityInsights(req, res) {
 
 export async function exportAlbumInsights(req, res) {
   try {
-    const { html, styles } = req.body;
+    const { album, insights, topTracks, artist } = req.body;
 
-    const pdf = await exportPDFService.generatePDF(html, styles);
+    const html = generateAlbumReportHTML(album, insights, topTracks, artist);
+    const pdf = await ExportPDFService.generatePDF(html, albumReportStyles);
 
-    res.contentType("application/pdf");
+    res.setHeader("Content-Type", "application/pdf");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="album-report-${req.params.id}.pdf"`
+      `attachment; filename="album-${album.name.replace(
+        /[^a-z0-9]/gi,
+        "_"
+      )}-report.pdf"`
     );
     res.send(pdf);
   } catch (error) {

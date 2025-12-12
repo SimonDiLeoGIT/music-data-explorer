@@ -8,6 +8,7 @@ import { HtmlRenderer } from "../../components/HtmlRenderer";
 import { Albums } from "./components/Albums";
 import { TopTracks } from "./components/TopTracks";
 import { ArtistHeaderSkeleton, BiographySkeleton, TopTracksSkeleton } from "../../components/Skeleton/ArtistSkeleton";
+import { FaFilePdf, FaSpinner } from "react-icons/fa";
 
 
 const Artist = () => {
@@ -15,6 +16,7 @@ const Artist = () => {
 
   const [artist, setArtist] = useState<ArtistInterface | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
 
   const fetchArtistData = async () => {
     if (!id) return;
@@ -33,6 +35,30 @@ const Artist = () => {
   useEffect(() => {
     fetchArtistData();
   }, [id]);
+
+  const handleExportPDF = async () => {
+    if (!artist || !id) return;
+    
+    setIsExporting(true);
+    try {
+      const response = await musicService.exportArtistInsights(id, {
+        artist
+      });
+      
+      // Crear un blob y descargarlo
+      const blob = new Blob([response], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `artist-${artist.name}-report.pdf`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -115,6 +141,23 @@ const Artist = () => {
               <p className="text-zinc-400 text-center">N/A</p>
             )}
           </article>
+          <button
+            onClick={handleExportPDF}
+            disabled={loading || !artist|| isExporting}
+            className="hover:cursor-pointer col-span-2 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md flex items-center justify-center gap-2 transition-colors"
+          >
+            {isExporting ? (
+              <>
+                <FaSpinner className="animate-spin" />
+                Exporting...
+              </>
+            ) : (
+              <>
+                <FaFilePdf />
+                Export Report
+              </>
+            )}
+          </button>
         </section>
       </header>
 

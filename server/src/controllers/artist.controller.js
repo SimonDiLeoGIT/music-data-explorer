@@ -2,6 +2,9 @@ import SpotifyService from "../services/spotify.service.js";
 import InsightsService from "../services/insights.service.js";
 import LastfmService from "../services/lastfm.service.js";
 import { durationMsToTimeString } from "../utils/TimeFormater.js";
+import { generateArtistReportHTML } from "../templates/artist/artist.template.js";
+import { artistReportStyles } from "../templates/artist/artist.styles.js";
+import ExportPDFService from "../services/exportPDF.service.js";
 
 export async function artistData(req, res) {
   const artistId = req.params.id;
@@ -76,5 +79,32 @@ export async function artistData(req, res) {
     res.status(200).json(response);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+}
+
+export async function exportArtistReport(req, res) {
+  try {
+    const artistData = req.body.artist;
+
+    if (!artistData) {
+      return res.status(400).json({ error: "Artist data not provided." });
+    }
+
+    const html = generateArtistReportHTML(artistData);
+
+    const pdf = await ExportPDFService.generatePDF(html, artistReportStyles);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="artist-${artistData.name.replace(
+        /[^a-z0-9]/gi,
+        "_"
+      )}-report.pdf"`
+    );
+    res.send(pdf);
+  } catch (error) {
+    console.error("Error generating Artist PDF:", error);
+    res.status(500).json({ error: "Failed to generate Artist PDF" });
   }
 }

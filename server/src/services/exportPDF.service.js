@@ -1,15 +1,20 @@
-class exportPDFService {
+import puppeteer from "puppeteer";
+
+class ExportPDFService {
   async generatePDF(html, styles) {
     const fullHTML = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="UTF-8">
-            <style>${styles}</style>
-          </head>
-          <body>${html}</body>
-        </html>
-      `;
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            ${styles}
+          </style>
+        </head>
+        <body>
+          ${html}
+        </body>
+      </html>`;
 
     const browser = await puppeteer.launch({
       headless: true,
@@ -19,7 +24,7 @@ class exportPDFService {
     const page = await browser.newPage();
     await page.setContent(fullHTML, { waitUntil: "networkidle0" });
 
-    await page.waitForTimeout(2000);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const pdf = await page.pdf({
       format: "A4",
@@ -33,7 +38,8 @@ class exportPDFService {
     });
 
     await browser.close();
-
     return pdf;
   }
 }
+
+export default new ExportPDFService();

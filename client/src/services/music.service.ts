@@ -1,4 +1,10 @@
-import {getRequest} from './api.service';
+import type { AlbumInterface } from '../interfaces/AlbumInteface';
+import type { ArtistCompactInterface, ArtistInterface } from '../interfaces/ArtistInterface';
+import type { GenreInterface, TopGenreTagInterface } from '../interfaces/GenderInterface';
+import type { InsightsInterface } from '../interfaces/InisightsInterfaces';
+import type { PlaylistInterface } from '../interfaces/PlaylistInterface';
+import type { TopTracksInterface } from '../interfaces/TrackInterface';
+import {downloadPDF, getRequest} from './api.service';
 
 class MusicService {
 
@@ -105,6 +111,40 @@ class MusicService {
 
   async getArtistData(artistId: string) {
     return getRequest(`/artists/${artistId}`);
+  }
+
+  async exportAlbumInsights(id: string, data: {
+    album: AlbumInterface,
+    insights: InsightsInterface,
+    topTracks: TopTracksInterface,
+    artist: ArtistCompactInterface
+  }) {
+    return downloadPDF(`/albums/${id}/insights/export`, data);
+  }
+
+  async exportPlaylistInsights(id: string, data: {
+    playlist: PlaylistInterface,
+    insights: InsightsInterface,
+    topTracks: TopTracksInterface,
+  }) {
+    return downloadPDF(`/playlists/${id}/insights/export`, data);
+  }
+
+  async exportArtistInsights(id: string, data: {
+    artist: ArtistInterface,
+  }) {
+    return downloadPDF(`/artists/${id}/insights/export`, data);
+  }
+
+  async exportGenreInsights(data: {
+    topGenres: GenreInterface[],
+    genreName: string,
+    topArtist: TopGenreTagInterface[],
+    topTracks: TopGenreTagInterface[],
+    topAlbums: TopGenreTagInterface[],
+  })
+  {
+    return downloadPDF(`/genres/insights/export`, data);
   }
 }
 

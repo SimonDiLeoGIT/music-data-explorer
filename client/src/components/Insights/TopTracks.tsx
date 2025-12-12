@@ -99,7 +99,7 @@ const TopTracks: React.FC<Props> = ({ topTracks}) => {
               </div>
 
               {/* Top Chart and List */}
-              <div className={`bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 ${currentTab && currentTab.color && `hover:border-${currentTab.color}-500/30`} transition-colors`}>
+              <div className={`bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30`}>
                 <h3 className={`text-lg font-semibold ${currentTab && currentTab?.color ? `text-${currentTab.color}-400` : "text-zinc-400"} mb-3 flex items-center gap-2`}>
                   Top 10 {currentTab?.label} Tracks
                 </h3>
@@ -155,7 +155,7 @@ const TopChart: React.FC<{top: TrackInterface[], model: string, label: string, t
 
 const TopList: React.FC<{top: TrackInterface[], model: string}> = ({top, model}) => {
   return (
-    <ul className="space-y-2 w-full md:flex-1">
+    <ul className="space-y-2 w-full md:w-1/3 md:flex-1">
       {top.map((track, index) => (
         <li 
           key={track?.name || `empty-${index}`} 

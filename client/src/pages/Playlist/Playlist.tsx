@@ -11,6 +11,7 @@ import TopArtists from "./components/TopArtists";
 import ExplicitTracks from "../../components/Insights/ExplicitTracks";
 import ExplicitTracksSkeleton from "../../components/Skeleton/ExplicitTracksSkeleton";
 import { formatNumber, formatNumberWithCommas } from "../../utils/formatNumbers";
+import { FaFilePdf, FaSpinner } from "react-icons/fa";
 
 const Playlist = () => {
 
@@ -20,6 +21,7 @@ const Playlist = () => {
   const [insights, setInsights] = useState<InsightsInterface|null>(null);
   const [topTracks, setTopTracks] = useState<TopTracksInterface|null>(null);
   const [loading, setLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
 
   const fetchData = async () => {
     if (!id) return;
@@ -59,6 +61,32 @@ const Playlist = () => {
     fetchInsights();
     fetchTopTracks();
   }, [id])
+
+  const handleExportPDF = async () => {
+    if (!playlist || !insights || !topTracks || !id) return;
+    
+    setIsExporting(true);
+    try {
+      const response = await musicService.exportPlaylistInsights(id, {
+        playlist,
+        insights,
+        topTracks,
+      });
+      
+      // Crear un blob y descargarlo
+      const blob = new Blob([response], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `playlist-${playlist.name}-report.pdf`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   return( 
     <main className='p-1 md:p-8 py-4 md:w-11/12 max-w-[1600px] mx-auto'>
@@ -108,6 +136,23 @@ const Playlist = () => {
                 <p className="font-semibold text-2xl text-purple-400 m-auto text-center">0h 00m</p>
               }
             </article>
+            <button
+              onClick={handleExportPDF}
+              disabled={loading || !insights || !topTracks || isExporting}
+              className="hover:cursor-pointer col-span-2 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-4 py-2 rounded-md flex items-center justify-center gap-2 transition-colors"
+            >
+              {isExporting ? (
+                <>
+                  <FaSpinner className="animate-spin" />
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <FaFilePdf />
+                  Export Report
+                </>
+              )}
+            </button>
           </section>
         </header>
       }
