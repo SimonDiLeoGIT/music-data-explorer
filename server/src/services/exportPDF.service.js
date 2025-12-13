@@ -17,7 +17,10 @@ class ExportPDFService {
     let browser = null;
 
     try {
-      const isVercel = process.env.VERCEL === "1";
+      const isVercel = process.env.VERCEL;
+
+      console.log("VERCEL:", process.env.VERCEL);
+      console.log("NODE_ENV:", process.env.NODE_ENV);
 
       if (isVercel) {
         const puppeteer = await import("puppeteer-core");
