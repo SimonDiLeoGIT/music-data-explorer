@@ -109,7 +109,7 @@ const Album = () => {
           }
           <section className="flex flex-col md:flex-row relative z-10">
             <img src={album?.cover} alt="Album Cover" className="w-64 h-64 rounded mx-auto md:mx-0"/>
-            <div className="flex flex-col justify-end center m-auto mb-0  md:ml-4 mt-4 md:mt-0 text-zinc-100 font-semibold gap-2 text-center md:text-left">
+            <div className="flex flex-col justify-end m-auto mb-0 md:ml-4 mt-4 md:mt-0 text-zinc-100 font-semibold gap-2 text-center md:text-left">
               <p className="text-sm">Album</p>
               <p className="text-3xl md:text-5xl">{album?.name}</p>
               <p className="text-sm">
