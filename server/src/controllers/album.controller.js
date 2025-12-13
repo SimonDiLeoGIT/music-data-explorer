@@ -47,6 +47,7 @@ export async function albumData(req, res) {
     );
 
     const reducedArtistInfo = {
+      id: artistData.id,
       name: albumData.artists[0].name,
       listeners: artistInfo.artist.stats.listeners,
       playcount: artistInfo.artist.stats.playcount,
@@ -219,7 +220,10 @@ export async function newReleases(req, res) {
     const reducedAlbums = newReleasesData.albums.items.map((album) => ({
       id: album.id,
       name: album.name,
-      artist: album.artists.map((artist) => artist.name).join(", "),
+      artist: {
+        id: album.artists[0].id,
+        name: album.artists[0].name,
+      },
       releaseDate: album.release_date.split("-")[0],
       cover: album.images[0]?.url || null,
       totalTracks: album.total_tracks,

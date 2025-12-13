@@ -10,7 +10,7 @@ export const ArtistHeaderSkeleton = () => {
           <div className="h-4 w-3/4 bg-zinc-700 rounded animate-pulse" />
         </div>
       </section>
-      <section className="absolute bottom-0 right-0 p-4 grid grid-cols-2 gap-4 z-50">
+      <section className="absolute top-0 right-0 p-4 grid grid-cols-2 gap-4 z-50">
         <article className="bg-zinc-700/50 p-4 rounded-md flex flex-col gap-2 shadow-md w-32">
           <div className="h-6 w-20 bg-zinc-600 rounded animate-pulse mx-auto" />
           <div className="h-8 w-16 bg-zinc-600 rounded animate-pulse mx-auto" />

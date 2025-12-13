@@ -48,7 +48,9 @@ const Home = () => {
                 >
                   {album.name}
                 </h2>
-                <p className="text-sm text-zinc-400 whitespace-nowrap overflow-hidden text-ellipsis" title={album.artist}>{album.artist}</p>
+                <p className="text-sm text-zinc-400 whitespace-nowrap overflow-hidden text-ellipsis" title={album.artist.name}>
+                  <Link to={`/artists/${album.artist.id}`} className="hover:underline">{album.artist.name}</Link>
+                </p>
                 <p className="text-sm text-zinc-400 whitespace-nowrap overflow-hidden text-ellipsis" title={album.releaseDate}>{album.releaseDate}</p>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { musicService } from "../../services/music.service";
 import type { AlbumInterface } from "../../interfaces/AlbumInteface";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ArtistData from "./components/ArtistData";
 import { ArtistDataSkeleton, PlaylistCardsSkeleton, PlaylistHeaderSkeleton } from "../../components/Skeleton/PlaylistSkeleton";
 import { formatNumber, formatNumberWithCommas } from "../../utils/formatNumbers";
@@ -112,10 +112,9 @@ const Album = () => {
             <div className="flex flex-col justify-end center m-auto mb-0  md:ml-4 mt-4 md:mt-0 text-zinc-100 font-semibold gap-2 text-center md:text-left">
               <p className="text-sm">Album</p>
               <p className="text-3xl md:text-5xl">{album?.name}</p>
-              <p className="text-sm">{album?.artist.name} 
-                <span className="text-zinc-400">
-                  &bull; {album?.releaseDate} &bull; {album?.totalTracks} songs, {insights?.time?.totalDuration}
-                </span>
+              <p className="text-sm">
+                <Link to={`/artists/${album?.artist.id}`} className="hover:underline">{album?.artist.name}</Link>
+                <span className="text-zinc-400"> &bull; {album?.releaseDate} &bull; {album?.totalTracks} songs, {insights?.time?.totalDuration}</span>
               </p>
             </div>
           </section>

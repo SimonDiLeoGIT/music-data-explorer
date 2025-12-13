@@ -17,7 +17,7 @@ export interface AlbumInterface {
 export interface NewReleaseInterface {
   id: string
   name: string
-  artist: string
+  artist: ArtistCompactInterface
   releaseDate: string
   cover: string
 }
