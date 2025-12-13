@@ -139,12 +139,11 @@ class SpotifyService {
     };
   }
 
-  async getNewReleases(limit = 12, offset = 0, country = "AR") {
-    if (limit > 50) limit = 50; // Spotify limit
+  async getNewReleases(limit = 12, offset = 0) {
+    if (limit > 50) limit = 50;
     return this.getRequest(`/browse/new-releases`, {
       limit,
       offset,
-      country,
     });
   }
 
