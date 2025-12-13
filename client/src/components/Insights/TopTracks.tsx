@@ -168,7 +168,7 @@ const TopList: React.FC<{top: TrackInterface[], model: string}> = ({top, model})
                 <p className="text-zinc-200 truncate" title={track.name}>{track.name}</p>
               </div>
               {model === "time" ? (
-                <span className="text-zinc-400">{track.duration.ms}</span>
+                <span className="text-zinc-400">{track.duration.timeString}</span>
               ) : (
                 <span className="text-zinc-400">{track.popularity}</span>
               )}
