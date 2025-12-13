@@ -104,8 +104,8 @@ const TopTracks: React.FC<Props> = ({ topTracks}) => {
                   Top 10 {currentTab?.label} Tracks
                 </h3>
                 <div className="flex flex-col md:flex-row gap-4 items-center">
-                  <TopList top={currentTab?.data} model="populatiry"/>
-                  <TopChart top={currentTab?.data} model="populatiry" label="Popularity" titles={["Popularity", "Tracks"]} horizontal={false} />
+                  <TopList top={currentTab?.data} model={currentTab?.model}/>
+                  <TopChart top={currentTab?.data} model={currentTab?.model} label={currentTab?.chartLabel} titles={[currentTab?.label, currentTab?.chartLabel]} horizontal={false} />
                 </div>
               </div>
             </>
@@ -140,7 +140,7 @@ const TopChart: React.FC<{top: TrackInterface[], model: string, label: string, t
           ),
           datasets: [{
             label: label,
-            data: model === "time" ? top.map((track) => track.duration.ms) : top.map((track) => track.popularity),
+            data: model == "time" ? top.map((track) => track.duration.ms) : top.map((track) => track.popularity),
             ...datasets
           }],
           xTitle: titles[0],
