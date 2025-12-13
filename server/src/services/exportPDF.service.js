@@ -17,18 +17,14 @@ class ExportPDFService {
     let browser = null;
 
     try {
-      const isProduction = process.env.NODE_ENV === "production";
+      const isVercel = process.env.VERCEL === "1";
 
-      if (isProduction) {
+      if (isVercel) {
         const puppeteer = await import("puppeteer-core");
         const chromium = await import("@sparticuz/chromium");
 
         browser = await puppeteer.default.launch({
-          args: [
-            ...chromium.default.args,
-            "--no-sandbox",
-            "--disable-setuid-sandbox",
-          ],
+          args: [...chromium.default.args],
           defaultViewport: chromium.default.defaultViewport,
           executablePath: await chromium.default.executablePath(),
           headless: chromium.default.headless,
