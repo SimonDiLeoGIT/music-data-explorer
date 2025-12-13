@@ -66,7 +66,7 @@ const Artist = () => {
 
   if (loading) {
     return (
-      <main className="p-8 py-4 w-11/12 max-w-[1600px] mx-auto">
+      <main className="p-1 md:p-8 py-4 md:w-11/12 max-w-[1600px] mx-auto">
         <ArtistHeaderSkeleton />
         <BiographySkeleton />
         <TopTracksSkeleton />
@@ -100,7 +100,7 @@ const Artist = () => {
             alt={artist?.name}
             className="w-64 h-64 rounded-full mx-auto md:mx-0 object-cover"
           />
-          <div className="flex flex-col justify-end center m-auto mb-0  md:ml-4 mt-4 md:mt-0 text-zinc-100 font-semibold gap-2 text-center md:text-left">
+          <div className="flex flex-col justify-end m-auto mb-0  md:ml-4 mt-4 md:mt-0 text-zinc-100 font-semibold gap-2 text-center md:text-left">
             <p className="text-sm">Artist</p>
             <p className="text-5xl">{artist?.name}</p>
             <div className="flex gap-2 flex-wrap">

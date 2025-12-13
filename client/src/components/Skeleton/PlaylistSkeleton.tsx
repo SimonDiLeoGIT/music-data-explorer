@@ -4,7 +4,7 @@ export const PlaylistHeaderSkeleton = () => {
       <div className="absolute inset-0 bg-zinc-900/50" />
       <section className="flex flex-col md:flex-row relative z-10">
         <div className="w-64 h-64 bg-zinc-700 rounded animate-pulse mx-auto md:mx-0 mb-4 md:mb-0" />
-        <div className="m-auto mb-0 md:ml-4 flex flex-col items-center md:items-start  gap-2 w-1/2">
+        <div className="m-auto mb-0 md:ml-4 flex flex-col items-center md:items-start gap-2 w-1/2">
           <div className="h-4 w-16 bg-zinc-700 rounded animate-pulse" />
           <div className="h-12 w-full bg-zinc-700 rounded animate-pulse" />
           <div className="h-4 w-3/4 bg-zinc-700 rounded animate-pulse" />
