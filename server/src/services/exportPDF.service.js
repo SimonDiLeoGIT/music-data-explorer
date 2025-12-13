@@ -1,5 +1,3 @@
-import puppeteer from "puppeteer";
-
 class ExportPDFService {
   async generatePDF(html, styles) {
     const fullHTML = `
@@ -16,29 +14,58 @@ class ExportPDFService {
         </body>
       </html>`;
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+    let browser = null;
 
-    const page = await browser.newPage();
-    await page.setContent(fullHTML, { waitUntil: "networkidle0" });
+    try {
+      const isProduction = process.env.NODE_ENV === "production";
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (isProduction) {
+        const puppeteer = await import("puppeteer-core");
+        const chromium = await import("@sparticuz/chromium");
 
-    const pdf = await page.pdf({
-      format: "A4",
-      printBackground: true,
-      margin: {
-        top: "20px",
-        right: "20px",
-        bottom: "20px",
-        left: "20px",
-      },
-    });
+        browser = await puppeteer.default.launch({
+          args: [
+            ...chromium.default.args,
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+          ],
+          defaultViewport: chromium.default.defaultViewport,
+          executablePath: await chromium.default.executablePath(),
+          headless: chromium.default.headless,
+        });
+      } else {
+        const puppeteer = await import("puppeteer");
 
-    await browser.close();
-    return pdf;
+        browser = await puppeteer.default.launch({
+          headless: true,
+          args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        });
+      }
+
+      const page = await browser.newPage();
+      await page.setContent(fullHTML, { waitUntil: "networkidle0" });
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const pdf = await page.pdf({
+        format: "A4",
+        printBackground: true,
+        margin: {
+          top: "20px",
+          right: "20px",
+          bottom: "20px",
+          left: "20px",
+        },
+      });
+
+      return pdf;
+    } catch (error) {
+      throw new Error(`PDF generation failed: ${error.message}`);
+    } finally {
+      if (browser) {
+        await browser.close();
+      }
+    }
   }
 }
 
