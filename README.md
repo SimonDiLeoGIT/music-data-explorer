@@ -141,3 +141,9 @@ pnpm install
 ```bash
 pnpm run dev
 ```
+
+### Open the application
+
+Once both backend and frontend are running, open your browser and go to:
+
+👉 http://localhost:5173
