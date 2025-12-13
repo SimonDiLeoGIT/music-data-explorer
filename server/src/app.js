@@ -20,11 +20,7 @@ app.use(
   })
 );
 
-console.log("App.js loaded, registering routes...");
-
 app.use("/api", routes);
-
-console.log("Routes registered");
 
 app.get("/api/health", (req, res) => {
   res.status(200).send("OK");

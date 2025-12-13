@@ -43,7 +43,7 @@ const BarChart: React.FC<Props> = ({data, onClick, horizontal = false}) => {
           ],
         }}
         options={{
-          onClick: (event, elements) => {
+          onClick: (_event, elements) => {
             if (elements.length > 0) {
               const index = elements[0].index;
               onClick(data.labels[index]);
