@@ -1,0 +1,13 @@
+name: Say hello
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  hello_world:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Hello world action step
+        run: echo "Hello, world!"
