@@ -7,26 +7,26 @@ import AlbumSkeleton from "../../components/Skeleton/AlbumReleasesSkeleton";
 const Home = () => {
 
   const [newReleases, setNewReleases] = useState<NewReleaseInterface[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = "Home | MDE";
   }, []);
 
-  const fetchNewReleases = async () => {
-    const data =  await musicService.getNewReleases();
-    setNewReleases(data);
-  }
-  
   useEffect(() => {
-    fetchNewReleases();
-  }, [])
+    const load = async () => {
+      setLoading(true);
+      try {
+        const data = await musicService.getNewReleases();
+        setNewReleases(data);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  useEffect(() => {
-    if (newReleases.length > 0) {
-      setLoading(false);
-    }
-  }, [newReleases])
+    load();
+  }, []);
+
 
   return (
     <main className='p-1 md:p-8 py-4 md:w-11/12 max-w-[1600px] mx-auto'>

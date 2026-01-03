@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export const PlaylistHeaderSkeleton = () => {
   return (
     <header className="bg-zinc-800 p-4 rounded-t-md relative overflow-hidden">
@@ -157,6 +159,16 @@ export const TracksSkeleton = () => {
 };
 
 export const SkeletonChart: React.FC = () => {
+
+  const [widths] = useState(() => 
+    Array.from({ length: 5 }, () => Math.random() * 30 + 40)
+  );
+
+  const [barsHeights] = useState(() => 
+    Array.from({ length: 10 }, () => Math.random() * 60 + 20)
+  );
+
+
   return (
     <div className="bg-zinc-900/50 rounded-lg p-4 border border-zinc-700/30 animate-pulse">
       {/* Header */}
@@ -175,7 +187,7 @@ export const SkeletonChart: React.FC = () => {
                 <div className="flex-1 h-4 bg-zinc-600/50 rounded"></div>
                 <div 
                   className="h-4 bg-zinc-600/50 rounded" 
-                  style={{ width: `${Math.random() * 30 + 40}px` }}
+                  style={{ width: `${widths[i]}px` }}
                 ></div>
               </div>
             ))}
@@ -190,7 +202,7 @@ export const SkeletonChart: React.FC = () => {
                 key={i} 
                 className="bg-zinc-600/50 rounded"
                 style={{ 
-                  height: `${Math.random() * 60 + 20}%`,
+                  height: `${barsHeights[i]}%`,
                   width: '100%'
                 }}
               ></div>

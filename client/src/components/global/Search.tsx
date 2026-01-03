@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { musicService } from "../../services/music.service";
 import { Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
@@ -11,31 +11,21 @@ const Search = () => {
   const [results, setResults] = useState<SearchResultInterface|null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    if (!query) {
-      setResults(null);
-      setIsOpen(false);
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      fetchData();
-    }, 500);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [query])
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const data = await musicService.search(query);
       setResults(data);
       setIsOpen(true);
     } catch (error) {
-      console.error('Error fetching track details:', error);
+      console.error(error);
     }
-  }
+  }, [query]);
+
+  useEffect(() => {
+    const timer = setTimeout(fetchData, 500);
+    return () => clearTimeout(timer);
+  }, [fetchData]);
+
 
   const handleSelect = () => {
     setQuery('');

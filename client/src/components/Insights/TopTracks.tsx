@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import BarChart from "../charts/BarChart";
 import type { TopTracksInterface, TrackInterface } from "../../interfaces/TrackInterface";
 import { SkeletonChart } from "../Skeleton/PlaylistSkeleton";
@@ -11,14 +11,9 @@ type ColorType = "green" | "red" | "purple" | "blue";
 
 const TopTracks: React.FC<Props> = ({ topTracks}) => {
 
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("popular");
 
-  useEffect(() => {
-    if (topTracks) {
-      setLoading(false);
-    }
-  }, [topTracks])
+  const loading = !topTracks || topTracks.mostPopularTracks.length === 0;
 
     const tabs: Array<{
     id: string;
