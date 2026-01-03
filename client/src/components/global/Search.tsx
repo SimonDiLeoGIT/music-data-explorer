@@ -12,6 +12,13 @@ const Search = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const fetchData = useCallback(async () => {
+
+    if (!query.trim()) {
+      setIsOpen(false);
+      setResults(null);
+      return;
+    }
+
     try {
       const data = await musicService.search(query);
       setResults(data);
