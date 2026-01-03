@@ -1,6 +1,7 @@
 import { Doughnut } from "react-chartjs-2";
 import * as Chart from 'chart.js';
 import type React from "react";
+import type { TooltipItem } from 'chart.js';
 
 Chart.Chart.register(...Chart.registerables);
 
@@ -53,7 +54,7 @@ const ExplicitTracks: React.FC<Props> = ({ totalTracks, explicitTracks }) => {
         padding: 12,
         displayColors: true,
         callbacks: {
-          label: function(context: any) {
+          label: function(context: TooltipItem<'doughnut'>) {
             const label = context.label || '';
             const value = context.parsed || 0;
             const percentage = totalTracks > 0 

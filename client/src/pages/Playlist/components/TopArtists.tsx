@@ -3,6 +3,7 @@ import { musicService } from "../../../services/music.service";
 import type { PlaylistArtistsFrequencyInterface } from "../../../interfaces/PlaylistInterface";
 import { Doughnut } from "react-chartjs-2";
 import * as Chart from 'chart.js';
+import type { TooltipItem } from "chart.js";
 import { generateColors } from "../../../utils/colorsGenerator";
 import TopArtistsSkeleton from "../../../components/Skeleton/TopArtistsSkeleton";
 Chart.Chart.register(...Chart.registerables);
@@ -69,7 +70,7 @@ const TopArtists: React.FC<Props> = ({ playlistId }) => {
         padding: 12,
         displayColors: true,
         callbacks: {
-          label: function(context: any) {
+          label: function(context: TooltipItem<'doughnut'>) {
             const label = context.label || '';
             const value = context.parsed || 0;
             if (!topArtists) return `${label}: ${value} tracks`; // Return early if topArtists
