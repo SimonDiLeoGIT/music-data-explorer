@@ -139,15 +139,24 @@ class SpotifyService {
     };
   }
 
+  // async getNewReleases(limit = 12, offset = 0) {
+  //   if (limit > 50) limit = 50;
+  //   const year = new Date().getFullYear();
+
+  //   return this.getRequest(`/search`, {
+  //     q: `year:${year}`,
+  //     type: "album",
+  //     limit,
+  //     market: "AR",
+  //   });
+  // }
   async getNewReleases(limit = 12, offset = 0) {
     if (limit > 50) limit = 50;
-    const year = new Date().getFullYear();
 
-    return this.getRequest(`/search`, {
-      q: `year:${year}`,
-      type: "album",
+    return this.getRequest(`/browse/new-releases`, {
       limit,
-      market: "AR",
+      offset,
+      country: "AR",
     });
   }
 
