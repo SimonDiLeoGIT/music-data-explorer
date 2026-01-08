@@ -12,7 +12,8 @@ Music Data Explorer is a web application that consumes public music APIs to unco
 
 ## 💡 Core Idea
 
-The project focuses on analyzing **popularity, engagement, and discovery metrics** from public music APIs to uncover meaningful insights about songs, artists, albums, and genres.
+Music Data Explorer analyzes aggregated popularity and engagement metrics from public music APIs to uncover trends in music discovery and consumption.
+By comparing artists, albums, playlists, and genres, the application transforms raw platform data into clear, visual insights that highlight how music performs at scale.
 
 ### ✨ Features
 
